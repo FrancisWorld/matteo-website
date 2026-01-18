@@ -1,0 +1,17 @@
+import { createFileRoute } from "@tanstack/react-router"
+import { createAPIFileRoute } from "@tanstack/start-api-routes";
+
+export const Route = createAPIFileRoute("/api/robots/txt")({
+	GET: () => {
+		const robots = `User-agent: *
+Allow: /
+
+Sitemap: https://matteo-website.vercel.app/api/sitemap.xml`;
+
+		return new Response(robots, {
+			headers: {
+				"Content-Type": "text/plain",
+			},
+		})
+	},
+});

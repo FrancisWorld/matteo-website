@@ -1,0 +1,14 @@
+
+> matteo-website@ dev /Users/chico/Documents/dev-workspace/matteo-projects/matteo-website
+> vite dev --port 3000
+
+
+  VITE v7.3.1  ready in 1277 ms
+
+  ➜  Local:   http://localhost:3000/
+  ➜  Network: use --host to expose
+[vite] connected.
+10:58:42 PM [vite] (client) hmr update /src/styles.css?direct, /src/routes/auth/register.tsx
+10:58:42 PM [vite] (ssr) page reload src/routes/auth/register.tsx
+[vite] program reload
+/Users/chico/Library/pnpm/pnpm: line 12: 10946 Killed: 9               "$basedir/.tools/pnpm-exe/10.23.0/pnpm" "$@"

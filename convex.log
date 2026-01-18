@@ -1,0 +1,392 @@
+- Preparing Convex functions...
+
+[32m✔[39m 22:56:56 Convex functions ready! (2.58s)
+- Preparing Convex functions...
+
+[31m✖[39m TypeScript typecheck via `tsc` failed.
+To ignore failing typecheck, use `--typecheck=disable`.
+- Collecting TypeScript errors
+
+[96mconvex/posts.ts[0m:[93m39[0m:[93m54[0m - [91merror[0m[90m TS2339: [0mProperty 'skip' does not exist on type 'OrderedQuery<{ document: { _id: Id<"posts">; _creationTime: number; excerpt?: string | undefined; coverImage?: string | undefined; createdAt: number; title: string; slug: string; content: string; authorId: string; authorName: string; publishedAt: number; }; fieldPaths: ExtractFieldPaths<...> | "_id"; indexes: { ...;...'.
+
+[7m39[0m     return await ctx.db.query("posts").order("desc").skip(offset).take(limit).collect();
+[7m  [0m [91m                                                     ~~~~[0m
+
+Found 1 error in convex/posts.ts[90m:39[0m
+- Preparing Convex functions...
+
+[32m✔[39m 02:50:02 Convex functions ready! (2.3s)
+- Preparing Convex functions...
+
+[32m✔[39m 02:50:45 Convex functions ready! (2.53s)
+- Preparing Convex functions...
+
+[32m✔[39m 02:50:55 Convex functions ready! (2.35s)
+- Preparing Convex functions...
+
+[31m✖[39m Error: Unable to start push to https://adorable-narwhal-837.convex.cloud
+✖ Error fetching POST  https://adorable-narwhal-837.convex.cloud/api/deploy2/start_push 400 Bad Request: Error: Hit an error while pushing:
+Hit an error while evaluating your schema:
+Uncaught TypeError: r.enum is not a function
+    at <anonymous> (../convex/schema.ts:79:26)
+- Preparing Convex functions...
+
+[32m✔[39m Added table indexes:
+  [+] quizResults.by_quiz   quizId, _creationTime
+  [+] quizResults.by_share_token   shareToken, _creationTime
+  [+] quizResults.by_user   userId, _creationTime
+  [+] quizzes.by_author   authorId, _creationTime
+✔ 02:51:51 Convex functions ready! (2.29s)
+- Preparing Convex functions...
+
+[32m✔[39m 02:52:02 Convex functions ready! (2.3s)
+- Preparing Convex functions...
+
+[32m✔[39m 02:53:27 Convex functions ready! (2.32s)
+- Preparing Convex functions...
+
+[32m✔[39m 02:53:45 Convex functions ready! (2.31s)
+- Preparing Convex functions...
+
+[31m✖[39m Schema validation failed.
+Document with ID "jd7296qy2qg718svd6e5ya4w257zcqj5" in table "videos" does not match the schema: Object is missing the required field `fetchedAt`. Consider wrapping the field validator in `v.optional(...)` if this is expected.
+
+Object: {date: "15/01/2026", description: "", duration: "PT50S", isShort: true, publishedAt: 1768490766000.0, thumbnail: "https://i.ytimg.com/vi/11DmVAU7EjM/hqdefault.jpg", title: "como que é o negócio problems?", videoId: "11DmVAU7EjM", views: 1399.0}
+Validator: v.object({commentCount: v.optional(v.float64()), description: v.optional(v.string()), duration: v.optional(v.string()), fetchedAt: v.float64(), likeCount: v.optional(v.float64()), publishedAt: v.float64(), tags: v.optional(v.array(v.string())), thumbnail: v.string(), thumbnailHigh: v.optional(v.string()), title: v.string(), viewCount: v.float64(), youtubeId: v.string()})
+- Preparing Convex functions...
+
+[31m✖[39m TypeScript typecheck via `tsc` failed.
+To ignore failing typecheck, use `--typecheck=disable`.
+- Collecting TypeScript errors
+
+[96mconvex/youtube.ts[0m:[93m84[0m:[93m34[0m - [91merror[0m[90m TS2339: [0mProperty 'videos' does not exist on type '{ youtube: { syncVideos: FunctionReference<"action", "internal", {}, null, string | undefined>; }; }'.
+
+[7m84[0m   await ctx.runMutation(internal.videos.upsertBatch, { videos });
+[7m  [0m [91m                                 ~~~~~~[0m
+
+Found 1 error in convex/youtube.ts[90m:84[0m
+- Preparing Convex functions...
+
+[31m✖[39m TypeScript typecheck via `tsc` failed.
+To ignore failing typecheck, use `--typecheck=disable`.
+- Collecting TypeScript errors
+
+[96mconvex/youtube.ts[0m:[93m84[0m:[93m34[0m - [91merror[0m[90m TS2339: [0mProperty 'videos' does not exist on type '{ youtube: { syncVideos: FunctionReference<"action", "internal", {}, null, string | undefined>; }; }'.
+
+[7m84[0m   await ctx.runMutation(internal.videos.upsertBatch, { videos });
+[7m  [0m [91m                                 ~~~~~~[0m
+
+Found 1 error in convex/youtube.ts[90m:84[0m
+- Preparing Convex functions...
+
+[31m✖[39m TypeScript typecheck via `tsc` failed.
+To ignore failing typecheck, use `--typecheck=disable`.
+- Collecting TypeScript errors
+
+[96mconvex/youtube.ts[0m:[93m84[0m:[93m34[0m - [91merror[0m[90m TS2339: [0mProperty 'videos' does not exist on type '{ youtube: { syncVideos: FunctionReference<"action", "internal", {}, null, string | undefined>; }; }'.
+
+[7m84[0m   await ctx.runMutation(internal.videos.upsertBatch, { videos });
+[7m  [0m [91m                                 ~~~~~~[0m
+
+Found 1 error in convex/youtube.ts[90m:84[0m
+- Preparing Convex functions...
+
+[31m✖[39m TypeScript typecheck via `tsc` failed.
+To ignore failing typecheck, use `--typecheck=disable`.
+- Collecting TypeScript errors
+
+[96mconvex/youtube.ts[0m:[93m84[0m:[93m34[0m - [91merror[0m[90m TS2339: [0mProperty 'videos' does not exist on type '{ youtube: { syncVideos: FunctionReference<"action", "internal", {}, null, string | undefined>; }; }'.
+
+[7m84[0m   await ctx.runMutation(internal.videos.upsertBatch, { videos });
+[7m  [0m [91m                                 ~~~~~~[0m
+
+Found 1 error in convex/youtube.ts[90m:84[0m
+- Preparing Convex functions...
+
+[31m✖[39m TypeScript typecheck via `tsc` failed.
+To ignore failing typecheck, use `--typecheck=disable`.
+- Collecting TypeScript errors
+
+[96mconvex/youtube.ts[0m:[93m84[0m:[93m34[0m - [91merror[0m[90m TS2339: [0mProperty 'videos' does not exist on type '{ youtube: { syncVideos: FunctionReference<"action", "internal", {}, null, string | undefined>; }; }'.
+
+[7m84[0m   await ctx.runMutation(internal.videos.upsertBatch, { videos });
+[7m  [0m [91m                                 ~~~~~~[0m
+
+Found 1 error in convex/youtube.ts[90m:84[0m
+- Preparing Convex functions...
+
+[31m✖[39m TypeScript typecheck via `tsc` failed.
+To ignore failing typecheck, use `--typecheck=disable`.
+- Collecting TypeScript errors
+
+[96mconvex/youtube.ts[0m:[93m84[0m:[93m34[0m - [91merror[0m[90m TS2339: [0mProperty 'videos' does not exist on type '{ youtube: { syncVideos: FunctionReference<"action", "internal", {}, null, string | undefined>; }; }'.
+
+[7m84[0m   await ctx.runMutation(internal.videos.upsertBatch, { videos });
+[7m  [0m [91m                                 ~~~~~~[0m
+
+Found 1 error in convex/youtube.ts[90m:84[0m
+- Preparing Convex functions...
+
+[31m✖[39m TypeScript typecheck via `tsc` failed.
+To ignore failing typecheck, use `--typecheck=disable`.
+- Collecting TypeScript errors
+
+[96mconvex/youtube.ts[0m:[93m84[0m:[93m34[0m - [91merror[0m[90m TS2339: [0mProperty 'videos' does not exist on type '{ youtube: { syncVideos: FunctionReference<"action", "internal", {}, null, string | undefined>; }; }'.
+
+[7m84[0m   await ctx.runMutation(internal.videos.upsertBatch, { videos });
+[7m  [0m [91m                                 ~~~~~~[0m
+
+Found 1 error in convex/youtube.ts[90m:84[0m
+- Preparing Convex functions...
+
+[31m✖[39m TypeScript typecheck via `tsc` failed.
+To ignore failing typecheck, use `--typecheck=disable`.
+- Collecting TypeScript errors
+
+[96mconvex/youtube.ts[0m:[93m84[0m:[93m34[0m - [91merror[0m[90m TS2339: [0mProperty 'videos' does not exist on type '{ youtube: { syncVideos: FunctionReference<"action", "internal", {}, null, string | undefined>; }; }'.
+
+[7m84[0m   await ctx.runMutation(internal.videos.upsertBatch, { videos });
+[7m  [0m [91m                                 ~~~~~~[0m
+
+Found 1 error in convex/youtube.ts[90m:84[0m
+- Preparing Convex functions...
+
+[31m✖[39m TypeScript typecheck via `tsc` failed.
+To ignore failing typecheck, use `--typecheck=disable`.
+- Collecting TypeScript errors
+
+[96mconvex/youtube.ts[0m:[93m84[0m:[93m34[0m - [91merror[0m[90m TS2339: [0mProperty 'videos' does not exist on type '{ youtube: { syncVideos: FunctionReference<"action", "internal", {}, null, string | undefined>; }; }'.
+
+[7m84[0m   await ctx.runMutation(internal.videos.upsertBatch, { videos });
+[7m  [0m [91m                                 ~~~~~~[0m
+
+Found 1 error in convex/youtube.ts[90m:84[0m
+- Preparing Convex functions...
+
+[31m✖[39m TypeScript typecheck via `tsc` failed.
+To ignore failing typecheck, use `--typecheck=disable`.
+- Collecting TypeScript errors
+
+[96mconvex/youtube.ts[0m:[93m84[0m:[93m34[0m - [91merror[0m[90m TS2339: [0mProperty 'videos' does not exist on type '{ youtube: { syncVideos: FunctionReference<"action", "internal", {}, null, string | undefined>; }; }'.
+
+[7m84[0m   await ctx.runMutation(internal.videos.upsertBatch, { videos });
+[7m  [0m [91m                                 ~~~~~~[0m
+
+Found 1 error in convex/youtube.ts[90m:84[0m
+Filesystem changed during push, retrying...
+- Preparing Convex functions...
+
+[31m✖[39m TypeScript typecheck via `tsc` failed.
+To ignore failing typecheck, use `--typecheck=disable`.
+- Collecting TypeScript errors
+
+[96mconvex/youtube.ts[0m:[93m84[0m:[93m34[0m - [91merror[0m[90m TS2339: [0mProperty 'videos' does not exist on type '{ youtube: { syncVideos: FunctionReference<"action", "internal", {}, null, string | undefined>; }; }'.
+
+[7m84[0m   await ctx.runMutation(internal.videos.upsertBatch, { videos });
+[7m  [0m [91m                                 ~~~~~~[0m
+
+Found 1 error in convex/youtube.ts[90m:84[0m
+- Preparing Convex functions...
+
+[31m✖[39m TypeScript typecheck via `tsc` failed.
+To ignore failing typecheck, use `--typecheck=disable`.
+- Collecting TypeScript errors
+
+[96mconvex/youtube.ts[0m:[93m84[0m:[93m34[0m - [91merror[0m[90m TS2339: [0mProperty 'videos' does not exist on type '{ youtube: { syncVideos: FunctionReference<"action", "internal", {}, null, string | undefined>; }; }'.
+
+[7m84[0m   await ctx.runMutation(internal.videos.upsertBatch, { videos });
+[7m  [0m [91m                                 ~~~~~~[0m
+
+Found 1 error in convex/youtube.ts[90m:84[0m
+- Preparing Convex functions...
+
+[31m✖[39m TypeScript typecheck via `tsc` failed.
+To ignore failing typecheck, use `--typecheck=disable`.
+- Collecting TypeScript errors
+
+[96mconvex/youtube.ts[0m:[93m84[0m:[93m34[0m - [91merror[0m[90m TS2339: [0mProperty 'videos' does not exist on type '{ youtube: { syncVideos: FunctionReference<"action", "internal", {}, null, string | undefined>; }; }'.
+
+[7m84[0m   await ctx.runMutation(internal.videos.upsertBatch, { videos });
+[7m  [0m [91m                                 ~~~~~~[0m
+
+Found 1 error in convex/youtube.ts[90m:84[0m
+- Preparing Convex functions...
+
+[31m✖[39m TypeScript typecheck via `tsc` failed.
+To ignore failing typecheck, use `--typecheck=disable`.
+- Collecting TypeScript errors
+
+[96mconvex/youtube.ts[0m:[93m84[0m:[93m34[0m - [91merror[0m[90m TS2339: [0mProperty 'videos' does not exist on type '{ youtube: { syncVideos: FunctionReference<"action", "internal", {}, null, string | undefined>; }; }'.
+
+[7m84[0m   await ctx.runMutation(internal.videos.upsertBatch, { videos });
+[7m  [0m [91m                                 ~~~~~~[0m
+
+Found 1 error in convex/youtube.ts[90m:84[0m
+Filesystem changed during push, retrying...
+- Preparing Convex functions...
+
+[31m✖[39m TypeScript typecheck via `tsc` failed.
+To ignore failing typecheck, use `--typecheck=disable`.
+- Collecting TypeScript errors
+
+[96mconvex/youtube.ts[0m:[93m84[0m:[93m34[0m - [91merror[0m[90m TS2339: [0mProperty 'videos' does not exist on type '{ youtube: { syncVideos: FunctionReference<"action", "internal", {}, null, string | undefined>; }; }'.
+
+[7m84[0m   await ctx.runMutation(internal.videos.upsertBatch, { videos });
+[7m  [0m [91m                                 ~~~~~~[0m
+
+Found 1 error in convex/youtube.ts[90m:84[0m
+- Preparing Convex functions...
+
+[31m✖[39m TypeScript typecheck via `tsc` failed.
+To ignore failing typecheck, use `--typecheck=disable`.
+- Collecting TypeScript errors
+
+[96mconvex/youtube.ts[0m:[93m84[0m:[93m34[0m - [91merror[0m[90m TS2339: [0mProperty 'videos' does not exist on type '{ youtube: { syncVideos: FunctionReference<"action", "internal", {}, null, string | undefined>; }; }'.
+
+[7m84[0m   await ctx.runMutation(internal.videos.upsertBatch, { videos });
+[7m  [0m [91m                                 ~~~~~~[0m
+
+Found 1 error in convex/youtube.ts[90m:84[0m
+- Preparing Convex functions...
+
+[31m✖[39m TypeScript typecheck via `tsc` failed.
+To ignore failing typecheck, use `--typecheck=disable`.
+- Collecting TypeScript errors
+
+[96mconvex/youtube.ts[0m:[93m84[0m:[93m34[0m - [91merror[0m[90m TS2339: [0mProperty 'videos' does not exist on type '{ youtube: { syncVideos: FunctionReference<"action", "internal", {}, null, string | undefined>; }; }'.
+
+[7m84[0m   await ctx.runMutation(internal.videos.upsertBatch, { videos });
+[7m  [0m [91m                                 ~~~~~~[0m
+
+Found 1 error in convex/youtube.ts[90m:84[0m
+Filesystem changed during push, retrying...
+- Preparing Convex functions...
+
+[31m✖[39m TypeScript typecheck via `tsc` failed.
+To ignore failing typecheck, use `--typecheck=disable`.
+- Collecting TypeScript errors
+
+[96mconvex/youtube.ts[0m:[93m84[0m:[93m34[0m - [91merror[0m[90m TS2339: [0mProperty 'videos' does not exist on type '{ youtube: { syncVideos: FunctionReference<"action", "internal", {}, null, string | undefined>; }; }'.
+
+[7m84[0m   await ctx.runMutation(internal.videos.upsertBatch, { videos });
+[7m  [0m [91m                                 ~~~~~~[0m
+
+Found 1 error in convex/youtube.ts[90m:84[0m
+Filesystem changed during push, retrying...
+- Preparing Convex functions...
+
+[31m✖[39m TypeScript typecheck via `tsc` failed.
+To ignore failing typecheck, use `--typecheck=disable`.
+- Collecting TypeScript errors
+
+[96mconvex/youtube.ts[0m:[93m84[0m:[93m34[0m - [91merror[0m[90m TS2339: [0mProperty 'videos' does not exist on type '{ youtube: { syncVideos: FunctionReference<"action", "internal", {}, null, string | undefined>; }; }'.
+
+[7m84[0m   await ctx.runMutation(internal.videos.upsertBatch, { videos });
+[7m  [0m [91m                                 ~~~~~~[0m
+
+Found 1 error in convex/youtube.ts[90m:84[0m
+- Preparing Convex functions...
+
+[31m✖[39m TypeScript typecheck via `tsc` failed.
+To ignore failing typecheck, use `--typecheck=disable`.
+- Collecting TypeScript errors
+
+[96mconvex/youtube.ts[0m:[93m84[0m:[93m34[0m - [91merror[0m[90m TS2339: [0mProperty 'videos' does not exist on type '{ youtube: { syncVideos: FunctionReference<"action", "internal", {}, null, string | undefined>; }; }'.
+
+[7m84[0m   await ctx.runMutation(internal.videos.upsertBatch, { videos });
+[7m  [0m [91m                                 ~~~~~~[0m
+
+Found 1 error in convex/youtube.ts[90m:84[0m
+- Preparing Convex functions...
+
+[31m✖[39m TypeScript typecheck via `tsc` failed.
+To ignore failing typecheck, use `--typecheck=disable`.
+- Collecting TypeScript errors
+
+[96mconvex/youtube.ts[0m:[93m84[0m:[93m34[0m - [91merror[0m[90m TS2339: [0mProperty 'videos' does not exist on type '{ youtube: { syncVideos: FunctionReference<"action", "internal", {}, null, string | undefined>; }; }'.
+
+[7m84[0m   await ctx.runMutation(internal.videos.upsertBatch, { videos });
+[7m  [0m [91m                                 ~~~~~~[0m
+
+Found 1 error in convex/youtube.ts[90m:84[0m
+Filesystem changed during push, retrying...
+- Preparing Convex functions...
+
+[31m✖[39m TypeScript typecheck via `tsc` failed.
+To ignore failing typecheck, use `--typecheck=disable`.
+- Collecting TypeScript errors
+
+[96mconvex/youtube.ts[0m:[93m84[0m:[93m34[0m - [91merror[0m[90m TS2339: [0mProperty 'videos' does not exist on type '{ youtube: { syncVideos: FunctionReference<"action", "internal", {}, null, string | undefined>; }; }'.
+
+[7m84[0m   await ctx.runMutation(internal.videos.upsertBatch, { videos });
+[7m  [0m [91m                                 ~~~~~~[0m
+
+Found 1 error in convex/youtube.ts[90m:84[0m
+- Preparing Convex functions...
+
+[32m✔[39m 10:07:22 Convex functions ready! (2.41s)
+- Preparing Convex functions...
+
+[31m✖[39m TypeScript typecheck via `tsc` failed.
+To ignore failing typecheck, use `--typecheck=disable`.
+- Collecting TypeScript errors
+
+[96mconvex/youtube.ts[0m:[93m84[0m:[93m34[0m - [91merror[0m[90m TS2339: [0mProperty 'videos' does not exist on type '{ youtube: { syncVideos: FunctionReference<"action", "internal", {}, null, string | undefined>; }; }'.
+
+[7m84[0m   await ctx.runMutation(internal.videos.upsertBatch, { videos });
+[7m  [0m [91m                                 ~~~~~~[0m
+
+Found 1 error in convex/youtube.ts[90m:84[0m
+- Preparing Convex functions...
+
+[32m✔[39m 10:08:06 Convex functions ready! (2.72s)
+- Preparing Convex functions...
+
+[32m✔[39m 10:09:06 Convex functions ready! (2.85s)
+- Preparing Convex functions...
+
+[32m✔[39m 10:09:15 Convex functions ready! (2.67s)
+- Preparing Convex functions...
+
+[32m✔[39m 10:12:21 Convex functions ready! (3.29s)
+- Preparing Convex functions...
+
+[32m✔[39m 10:17:17 Convex functions ready! (2.94s)
+- Preparing Convex functions...
+
+[32m✔[39m 10:17:59 Convex functions ready! (3.04s)
+- Preparing Convex functions...
+
+[32m✔[39m 10:18:28 Convex functions ready! (2.75s)
+- Preparing Convex functions...
+
+[32m✔[39m 10:18:41 Convex functions ready! (2.93s)
+- Preparing Convex functions...
+
+[32m✔[39m 10:19:24 Convex functions ready! (3.03s)
+- Preparing Convex functions...
+
+[32m✔[39m 10:19:28 Convex functions ready! (2.68s)
+- Preparing Convex functions...
+
+[32m✔[39m 10:19:37 Convex functions ready! (2.71s)
+- Preparing Convex functions...
+
+[31m✖[39m Error: Unable to finish push to https://adorable-narwhal-837.convex.cloud
+✖ Error fetching POST  https://adorable-narwhal-837.convex.cloud/api/deploy2/finish_push 503 Service Unavailable: OptimisticConcurrencyControlFailure: Hit an error while pushing:
+Data read or written in this mutation changed while it was being run. Consider reducing the amount of data read by using indexed queries with selective index range expressions (https://docs.convex.dev/database/indexes/).
+Failed due to network error, retrying in 321.7ms...
+- Preparing Convex functions...
+
+[32m✔[39m 10:21:53 Convex functions ready! (2.06s)
+ ERROR  Command was killed with SIGTERM (Termination): convex dev
+
+pnpm: Command was killed with SIGTERM (Termination): convex dev
+    at makeError (/snapshot/dist/pnpm.cjs)
+    at handlePromise (/snapshot/dist/pnpm.cjs)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.handler [as dlx] (/snapshot/dist/pnpm.cjs)
+    at async /snapshot/dist/pnpm.cjs
+    at async main (/snapshot/dist/pnpm.cjs)
+    at async runPnpm (/snapshot/dist/pnpm.cjs)
+    at async /snapshot/dist/pnpm.cjs
