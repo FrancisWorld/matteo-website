@@ -14,7 +14,13 @@ export function PixelCard({
 	return (
 		<motion.div
 			whileHover={hoverEffect ? { y: -4 } : undefined}
-			transition={{ ease: "linear", duration: 0.1 }}
+			transition={{ type: "tween", duration: 0.15, ease: "linear" }}
+			style={
+				{
+					"--shadow-right": "#000000",
+					"--shadow-bottom": "#000000",
+				} as React.CSSProperties
+			}
 			className={cn(
 				"bg-card text-card-foreground border-2 border-foreground p-4 md:p-6 3xl:p-8 4xl:p-12",
 				"shadow-[4px_4px_0px_0px_var(--foreground)] md:shadow-[6px_6px_0px_0px_var(--foreground)] 4xl:shadow-[8px_8px_0px_0px_var(--foreground)]",

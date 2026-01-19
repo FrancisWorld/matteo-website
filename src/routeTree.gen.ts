@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VideosRouteImport } from './routes/videos'
 import { Route as ShopRouteImport } from './routes/shop'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as CommunityRouteImport } from './routes/community'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
@@ -22,8 +23,10 @@ import { Route as VideosIdRouteImport } from './routes/videos/$id'
 import { Route as QuizIdRouteImport } from './routes/quiz/$id'
 import { Route as BlogNewRouteImport } from './routes/blog/new'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
+import { Route as AuthVerifyOtpRouteImport } from './routes/auth/verify-otp'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
+import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
 import { Route as ApiTestRouteImport } from './routes/api/test'
 import { Route as ApiEnvRouteImport } from './routes/api/env'
 import { Route as UserUsernameBlogRouteImport } from './routes/user/$username/blog'
@@ -38,6 +41,11 @@ const VideosRoute = VideosRouteImport.update({
 const ShopRoute = ShopRouteImport.update({
   id: '/shop',
   path: '/shop',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CommunityRoute = CommunityRouteImport.update({
@@ -95,6 +103,11 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthVerifyOtpRoute = AuthVerifyOtpRouteImport.update({
+  id: '/auth/verify-otp',
+  path: '/auth/verify-otp',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRegisterRoute = AuthRegisterRouteImport.update({
   id: '/auth/register',
   path: '/auth/register',
@@ -103,6 +116,11 @@ const AuthRegisterRoute = AuthRegisterRouteImport.update({
 const AuthLoginRoute = AuthLoginRouteImport.update({
   id: '/auth/login',
   path: '/auth/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
+  id: '/auth/forgot-password',
+  path: '/auth/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiTestRoute = ApiTestRouteImport.update({
@@ -135,12 +153,15 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/community': typeof CommunityRoute
+  '/settings': typeof SettingsRoute
   '/shop': typeof ShopRoute
   '/videos': typeof VideosRouteWithChildren
   '/api/env': typeof ApiEnvRoute
   '/api/test': typeof ApiTestRoute
+  '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/auth/verify-otp': typeof AuthVerifyOtpRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/new': typeof BlogNewRoute
   '/quiz/$id': typeof QuizIdRoute
@@ -156,11 +177,14 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/community': typeof CommunityRoute
+  '/settings': typeof SettingsRoute
   '/shop': typeof ShopRoute
   '/api/env': typeof ApiEnvRoute
   '/api/test': typeof ApiTestRoute
+  '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/auth/verify-otp': typeof AuthVerifyOtpRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/new': typeof BlogNewRoute
   '/quiz/$id': typeof QuizIdRoute
@@ -178,12 +202,15 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/community': typeof CommunityRoute
+  '/settings': typeof SettingsRoute
   '/shop': typeof ShopRoute
   '/videos': typeof VideosRouteWithChildren
   '/api/env': typeof ApiEnvRoute
   '/api/test': typeof ApiTestRoute
+  '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
+  '/auth/verify-otp': typeof AuthVerifyOtpRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/blog/new': typeof BlogNewRoute
   '/quiz/$id': typeof QuizIdRoute
@@ -202,12 +229,15 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/community'
+    | '/settings'
     | '/shop'
     | '/videos'
     | '/api/env'
     | '/api/test'
+    | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/register'
+    | '/auth/verify-otp'
     | '/blog/$slug'
     | '/blog/new'
     | '/quiz/$id'
@@ -223,11 +253,14 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/community'
+    | '/settings'
     | '/shop'
     | '/api/env'
     | '/api/test'
+    | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/register'
+    | '/auth/verify-otp'
     | '/blog/$slug'
     | '/blog/new'
     | '/quiz/$id'
@@ -244,12 +277,15 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/community'
+    | '/settings'
     | '/shop'
     | '/videos'
     | '/api/env'
     | '/api/test'
+    | '/auth/forgot-password'
     | '/auth/login'
     | '/auth/register'
+    | '/auth/verify-otp'
     | '/blog/$slug'
     | '/blog/new'
     | '/quiz/$id'
@@ -267,12 +303,15 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   CommunityRoute: typeof CommunityRoute
+  SettingsRoute: typeof SettingsRoute
   ShopRoute: typeof ShopRoute
   VideosRoute: typeof VideosRouteWithChildren
   ApiEnvRoute: typeof ApiEnvRoute
   ApiTestRoute: typeof ApiTestRoute
+  AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
   AuthLoginRoute: typeof AuthLoginRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
+  AuthVerifyOtpRoute: typeof AuthVerifyOtpRoute
   BlogSlugRoute: typeof BlogSlugRoute
   BlogNewRoute: typeof BlogNewRoute
   QuizIdRoute: typeof QuizIdRoute
@@ -297,6 +336,13 @@ declare module '@tanstack/react-router' {
       path: '/shop'
       fullPath: '/shop'
       preLoaderRoute: typeof ShopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/community': {
@@ -376,6 +422,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/verify-otp': {
+      id: '/auth/verify-otp'
+      path: '/auth/verify-otp'
+      fullPath: '/auth/verify-otp'
+      preLoaderRoute: typeof AuthVerifyOtpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth/register': {
       id: '/auth/register'
       path: '/auth/register'
@@ -388,6 +441,13 @@ declare module '@tanstack/react-router' {
       path: '/auth/login'
       fullPath: '/auth/login'
       preLoaderRoute: typeof AuthLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/forgot-password': {
+      id: '/auth/forgot-password'
+      path: '/auth/forgot-password'
+      fullPath: '/auth/forgot-password'
+      preLoaderRoute: typeof AuthForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/test': {
@@ -455,12 +515,15 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   CommunityRoute: CommunityRoute,
+  SettingsRoute: SettingsRoute,
   ShopRoute: ShopRoute,
   VideosRoute: VideosRouteWithChildren,
   ApiEnvRoute: ApiEnvRoute,
   ApiTestRoute: ApiTestRoute,
+  AuthForgotPasswordRoute: AuthForgotPasswordRoute,
   AuthLoginRoute: AuthLoginRoute,
   AuthRegisterRoute: AuthRegisterRoute,
+  AuthVerifyOtpRoute: AuthVerifyOtpRoute,
   BlogSlugRoute: BlogSlugRoute,
   BlogNewRoute: BlogNewRoute,
   QuizIdRoute: QuizIdRoute,

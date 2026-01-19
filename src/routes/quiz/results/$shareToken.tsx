@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "convex/react";
 import { Repeat2, Share2 } from "lucide-react";
 import { motion } from "motion/react";
+import { PageWrapper } from "@/components/pixel/PageWrapper";
 import { PixelButton } from "@/components/pixel/PixelButton";
 import { PixelCard } from "@/components/pixel/PixelCard";
 import { api } from "../../../../convex/_generated/api";
@@ -48,15 +49,15 @@ function QuizResults() {
 
 	if (result === undefined) {
 		return (
-			<div className="flex items-center justify-center min-h-[50vh]">
+			<PageWrapper className="flex items-center justify-center">
 				<div className="font-pixel">LOADING RESULTS...</div>
-			</div>
+			</PageWrapper>
 		);
 	}
 
 	if (!result) {
 		return (
-			<div className="flex items-center justify-center min-h-[50vh]">
+			<PageWrapper className="flex items-center justify-center">
 				<PixelCard className="text-center p-12">
 					<h1 className="text-4xl font-pixel mb-4">RESULTS NOT FOUND</h1>
 					<p className="text-muted-foreground mb-6">
@@ -66,7 +67,7 @@ function QuizResults() {
 						<PixelButton>BACK TO QUIZZES</PixelButton>
 					</Link>
 				</PixelCard>
-			</div>
+			</PageWrapper>
 		);
 	}
 
@@ -83,7 +84,7 @@ function QuizResults() {
 	};
 
 	return (
-		<div className="max-w-4xl mx-auto space-y-8">
+		<PageWrapper className="max-w-4xl mx-auto space-y-8">
 			<motion.div
 				initial={{ scale: 0.8, opacity: 0 }}
 				animate={{ scale: 1, opacity: 1 }}
@@ -176,6 +177,6 @@ function QuizResults() {
 					</PixelButton>
 				</Link>
 			</div>
-		</div>
+		</PageWrapper>
 	);
 }

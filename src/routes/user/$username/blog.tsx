@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "convex/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
+import { PageWrapper } from "@/components/pixel/PageWrapper";
 import { PixelButton } from "@/components/pixel/PixelButton";
 import { PixelCard } from "@/components/pixel/PixelCard";
 import { api } from "../../../../convex/_generated/api";
@@ -36,7 +37,7 @@ function UserBlogIndex() {
 
 	if (!user) {
 		return (
-			<div className="flex items-center justify-center min-h-[50vh]">
+			<PageWrapper className="flex items-center justify-center">
 				<PixelCard className="text-center p-12">
 					<h1 className="text-4xl font-pixel mb-4">USER NOT FOUND</h1>
 					<p className="text-muted-foreground mb-6">
@@ -46,12 +47,12 @@ function UserBlogIndex() {
 						<PixelButton>BACK TO BLOG</PixelButton>
 					</Link>
 				</PixelCard>
-			</div>
+			</PageWrapper>
 		);
 	}
 
 	return (
-		<div className="space-y-8">
+		<PageWrapper className="space-y-8">
 			<div className="flex items-center justify-between">
 				<div>
 					<h1 className="text-4xl font-pixel mb-2">{username.toUpperCase()}</h1>
@@ -141,6 +142,6 @@ function UserBlogIndex() {
 					</PixelButton>
 				</div>
 			)}
-		</div>
+		</PageWrapper>
 	);
 }

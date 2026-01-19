@@ -10,7 +10,11 @@ export default defineSchema({
     email: v.string(),
     emailVerified: v.boolean(),
     image: v.optional(v.string()),
+    minecraftUsername: v.optional(v.string()), // Username para buscar skin
     role: v.optional(v.string()),
+    banned: v.optional(v.boolean()),
+    banReason: v.optional(v.string()),
+    banExpires: v.optional(v.number()),
     createdAt: v.number(),
     updatedAt: v.number(),
   })

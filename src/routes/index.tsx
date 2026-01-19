@@ -3,6 +3,7 @@ import { useQuery } from "convex/react";
 import { BookOpen, ChevronRight, Trophy, Youtube } from "lucide-react";
 import { motion } from "motion/react";
 import { ContentCard } from "@/components/pixel/ContentCard";
+import { PageWrapper } from "@/components/pixel/PageWrapper";
 import { PixelButton } from "@/components/pixel/PixelButton";
 import { api } from "../../convex/_generated/api";
 
@@ -19,7 +20,11 @@ function Home() {
 	const heroVideo = mostViewedVideos?.[0];
 
 	return (
-		<div className="space-y-0">
+		<PageWrapper
+			withContainer={false}
+			withPadding={false}
+			className="space-y-0"
+		>
 			{/* HERO SECTION */}
 			<section className="relative bg-[#0a0a0a] border-b-4 md:border-b-6 4xl:border-b-8 border-black overflow-hidden min-h-[60vh] md:min-h-[70vh] 3xl:min-h-[80vh] 4xl:min-h-screen flex items-center">
 				<div className="absolute inset-0 bg-[url('https://www.minecraft.net/content/dam/games/minecraft/key-art/Minecraft-1-19-Wild-Update-Key-Art.jpg')] bg-cover bg-center opacity-40 grayscale-[30%]" />
@@ -42,12 +47,19 @@ function Home() {
 						</p>
 						<div className="flex flex-col sm:flex-row gap-2 md:gap-4 pt-2 md:pt-4">
 							<Link to="/videos">
-								<PixelButton size="lg" className="text-sm md:text-base w-full sm:w-auto">
+								<PixelButton
+									size="lg"
+									className="text-sm md:text-base w-full sm:w-auto"
+								>
 									WATCH VIDEOS
 								</PixelButton>
 							</Link>
 							<Link to="/quiz">
-								<PixelButton size="lg" variant="secondary" className="text-sm md:text-base w-full sm:w-auto">
+								<PixelButton
+									size="lg"
+									variant="secondary"
+									className="text-sm md:text-base w-full sm:w-auto"
+								>
 									PLAY QUIZ
 								</PixelButton>
 							</Link>
@@ -61,13 +73,14 @@ function Home() {
 							transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
 							className="hidden lg:block"
 						>
+							<div className="absolute -inset-4 bg-primary/20 blur-2xl rounded-full" />
 							<ContentCard
 								title={heroVideo.title}
 								type="video"
 								href={`/videos/${heroVideo._id}`}
 								thumbnail={heroVideo.thumbnailHigh || heroVideo.thumbnail}
 								isMostViewed
-								className="transform rotate-2 hover:rotate-0 transition-transform duration-300"
+								className="transform rotate-2 hover:rotate-0 transition-transform duration-300 relative z-10"
 							/>
 						</motion.div>
 					)}
@@ -80,7 +93,10 @@ function Home() {
 					<div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
 						<div>
 							<h2 className="text-2xl sm:text-3xl md:text-4xl 3xl:text-5xl 4xl:text-6xl font-pixel text-white mb-2 md:mb-3 flex items-center gap-2 md:gap-3">
-								<Youtube size={28} className="md:size-8 4xl:size-12 text-red-600" />
+								<Youtube
+									size={28}
+									className="md:size-8 4xl:size-12 text-red-600"
+								/>
 								LATEST VIDEOS
 							</h2>
 							<div className="h-1 md:h-1.5 4xl:h-2 w-32 md:w-40 bg-primary" />
@@ -90,27 +106,26 @@ function Home() {
 								variant="ghost"
 								className="text-primary hover:text-primary/80 text-xs md:text-sm 3xl:text-base 4xl:text-lg"
 							>
-								VIEW ALL <ChevronRight size={16} className="md:size-5 4xl:size-7" />
+								VIEW ALL{" "}
+								<ChevronRight size={16} className="md:size-5 4xl:size-7" />
 							</PixelButton>
 						</Link>
 					</div>
 
 					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6 gap-4 md:gap-6 3xl:gap-8 4xl:gap-10">
 						{recentVideos
-							? recentVideos.map((video: any, i: number) => (
+							? recentVideos.map((video: any) => (
 									<motion.div
 										key={video._id}
 										initial={{ opacity: 0, y: 20 }}
 										whileInView={{ opacity: 1, y: 0 }}
 										viewport={{ once: true }}
-										transition={{ delay: i * 0.1 }}
 									>
 										<ContentCard
 											title={video.title}
 											type="video"
 											href={`/videos/${video._id}`}
 											thumbnail={video.thumbnailHigh || video.thumbnail}
-											isRecent={i === 0}
 											metadata={[
 												{
 													label: "VIEWS",
@@ -120,10 +135,10 @@ function Home() {
 										/>
 									</motion.div>
 								))
-							: Array.from({ length: 4 }).map((_, i) => (
+							: [1, 2, 3, 4].map((id) => (
 									<div
-										key={`skeleton-${i}`}
-										className="aspect-video bg-muted animate-pulse border-2 border-muted"
+										key={id}
+										className="aspect-video bg-[#1a1a1a] animate-pulse border-2 border-[#222]"
 									/>
 								))}
 					</div>
@@ -138,25 +153,32 @@ function Home() {
 						<div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3">
 							<div>
 								<h2 className="text-2xl sm:text-3xl md:text-4xl 3xl:text-5xl 4xl:text-6xl font-pixel text-white mb-2 md:mb-3 flex items-center gap-2 md:gap-3">
-									<BookOpen size={28} className="md:size-8 4xl:size-12 text-[#795548]" />
+									<BookOpen
+										size={28}
+										className="md:size-8 4xl:size-12 text-[#795548]"
+									/>
 									LATEST STORIES
 								</h2>
 								<div className="h-1 md:h-1.5 4xl:h-2 w-32 md:w-40 bg-[#795548]" />
 							</div>
 							<Link to="/blog">
-								<PixelButton variant="ghost" className="text-xs md:text-sm 3xl:text-base 4xl:text-lg">MORE</PixelButton>
+								<PixelButton
+									variant="ghost"
+									className="text-xs md:text-sm 3xl:text-base 4xl:text-lg"
+								>
+									MORE
+								</PixelButton>
 							</Link>
 						</div>
 
 						<div className="space-y-3 md:space-y-4 3xl:space-y-5">
 							{recentPosts
-								? recentPosts.map((post: any, i: number) => (
+								? recentPosts.map((post: any) => (
 										<motion.div
 											key={post._id}
 											initial={{ opacity: 0, x: -20 }}
 											whileInView={{ opacity: 1, x: 0 }}
 											viewport={{ once: true }}
-											transition={{ delay: i * 0.1 }}
 										>
 											<ContentCard
 												title={post.title}
@@ -177,25 +199,32 @@ function Home() {
 						<div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3">
 							<div>
 								<h2 className="text-2xl sm:text-3xl md:text-4xl 3xl:text-5xl 4xl:text-6xl font-pixel text-white mb-2 md:mb-3 flex items-center gap-2 md:gap-3">
-									<Trophy size={28} className="md:size-8 4xl:size-12 text-[#FF5555]" />
+									<Trophy
+										size={28}
+										className="md:size-8 4xl:size-12 text-[#FF5555]"
+									/>
 									CHALLENGES
 								</h2>
 								<div className="h-1 md:h-1.5 4xl:h-2 w-32 md:w-40 bg-[#FF5555]" />
 							</div>
 							<Link to="/quiz">
-								<PixelButton variant="ghost" className="text-xs md:text-sm 3xl:text-base 4xl:text-lg">MORE</PixelButton>
+								<PixelButton
+									variant="ghost"
+									className="text-xs md:text-sm 3xl:text-base 4xl:text-lg"
+								>
+									MORE
+								</PixelButton>
 							</Link>
 						</div>
 
 						<div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 3xl:gap-5 4xl:gap-6">
 							{recentQuizzes
-								? recentQuizzes.map((quiz: any, i: number) => (
+								? recentQuizzes.map((quiz: any) => (
 										<motion.div
 											key={quiz._id}
 											initial={{ opacity: 0, scale: 0.9 }}
 											whileInView={{ opacity: 1, scale: 1 }}
 											viewport={{ once: true }}
-											transition={{ delay: i * 0.1 }}
 										>
 											<ContentCard
 												title={quiz.title}
@@ -242,7 +271,10 @@ function Home() {
 									placeholder="Enter your email"
 									className="bg-[#2a2a2a] border-2 md:border-3 4xl:border-4 border-[#555] p-3 md:p-4 3xl:p-5 4xl:p-6 font-body text-sm md:text-base 3xl:text-lg 4xl:text-2xl text-white focus:border-primary focus:outline-none placeholder:text-gray-600 w-full"
 								/>
-								<PixelButton size="lg" className="w-full text-xs md:text-sm 3xl:text-base 4xl:text-lg">
+								<PixelButton
+									size="lg"
+									className="w-full text-xs md:text-sm 3xl:text-base 4xl:text-lg"
+								>
 									SUBSCRIBE
 								</PixelButton>
 								<p className="text-[10px] md:text-xs 3xl:text-sm 4xl:text-base text-gray-600 font-body text-center">
@@ -253,6 +285,6 @@ function Home() {
 					</div>
 				</div>
 			</section>
-		</div>
+		</PageWrapper>
 	);
 }
