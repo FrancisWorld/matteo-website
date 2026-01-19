@@ -6,6 +6,13 @@ import { useState } from "react";
 import { ContentCard } from "@/components/pixel/ContentCard";
 import { PageWrapper } from "@/components/pixel/PageWrapper";
 import { PixelButton } from "@/components/pixel/PixelButton";
+import {
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+	CarouselNext,
+	CarouselPrevious,
+} from "@/components/ui/carousel";
 import { api } from "../../../convex/_generated/api";
 
 export const Route = createFileRoute("/videos/")({
@@ -23,15 +30,6 @@ export const Route = createFileRoute("/videos/")({
 
 function VideosIndex() {
 	const [search, setSearch] = useState("");
-	// Pagination state removed for Infinite Scroll implementation in future (using increased limit for now to simulate "Load More" simply by scrolling or button if needed, but user asked for infinite carousel which implies no paging)
-	// Actually, "infinite carousel" likely refers to the vertical list that just keeps growing or a grid.
-	// For now, I'll increase the limit significantly or handle simple "Load More" as a first step towards "infinite".
-	// But since the user specifically asked for the "infinite carousel" that was removed, I should check if I can restore the Carousel component usage OR just make a very long grid.
-	// Given "videos tab" usually means the index, and "carousel" implies horizontal...
-	// But "it should NOT have pagination, it should be the infinite carrousel".
-	// I will implement a "Load More" button that appends to the list, which is a robust way to handle "infinite" content without complexity of scroll listeners for now, or I can try to restore a Carousel view if that's what they really meant.
-	// However, for a /videos page, a GRID is standard. "Infinite Carousel" might be a misnomer for "Infinite Scroll Grid".
-	// I will implement a "Load More" button for now which is UX friendly.
 	const [limit, setLimit] = useState(20);
 
 	const shorts = useQuery(api.videos.list, {
@@ -57,10 +55,8 @@ function VideosIndex() {
 		return Date.now() - timestamp < threeDays;
 	};
 
-	// Placeholder for actual popular video logic if not available in API efficiently for client-side filtering of the whole list.
-	// Assuming "Popular" means > 10k views for now or similar.
 	const isMostViewed = (video: any) => {
-		return video.viewCount > 10000; // Example threshold
+		return video.viewCount > 10000;
 	};
 
 	const handleLoadMore = () => {
@@ -92,7 +88,7 @@ function VideosIndex() {
 					</div>
 				</div>
 
-				{/* VIDEOS SECTION (Moved above Shorts) */}
+				{/* VIDEOS SECTION */}
 				<section className="space-y-4 md:space-y-6">
 					<h2 className="text-xl md:text-2xl 3xl:text-3xl font-pixel text-white pixel-text-shadow">
 						TODOS OS VÍDEOS
@@ -156,36 +152,53 @@ function VideosIndex() {
 					)}
 				</section>
 
-				{/* SHORTS SECTION (Moved below Videos) */}
+				{/* SHORTS CAROUSEL SECTION */}
 				{shorts && shorts.length > 0 && !search && (
 					<section className="space-y-4 md:space-y-6 pt-8 md:pt-12 border-t-4 border-muted/30">
 						<h2 className="text-xl md:text-2xl 3xl:text-3xl font-pixel text-red-500 pixel-text-shadow flex items-center gap-2">
 							SHORTS <span className="text-white text-sm">⚡</span>
 						</h2>
-						<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 3xl:grid-cols-8 gap-3 md:gap-4">
-							{shorts.map((video: any, i: number) => (
-								<motion.div
-									key={video._id}
-									initial={{ opacity: 0, scale: 0.9 }}
-									animate={{ opacity: 1, scale: 1 }}
-									transition={{ delay: i * 0.05 }}
-								>
-									<ContentCard
-										title={video.title}
-										type="video"
-										thumbnail={video.thumbnailHigh || video.thumbnail}
-										href={`/videos/${video._id}`}
-										isShort
-										isRecent={isRecent(video.publishedAt)}
-										metadata={[
-											{
-												label: "VISUALIZAÇÕES",
-												value: formatViews(video.viewCount),
-											},
-										]}
-									/>
-								</motion.div>
-							))}
+
+						<div className="px-8 md:px-12">
+							<Carousel
+								opts={{
+									align: "start",
+									loop: false,
+								}}
+								className="w-full"
+							>
+								<CarouselContent className="-ml-2 md:-ml-4">
+									{shorts.map((video: any, i: number) => (
+										<CarouselItem
+											key={video._id}
+											className="pl-2 md:pl-4 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6"
+										>
+											<motion.div
+												initial={{ opacity: 0, scale: 0.9 }}
+												animate={{ opacity: 1, scale: 1 }}
+												transition={{ delay: i * 0.05 }}
+											>
+												<ContentCard
+													title={video.title}
+													type="video"
+													thumbnail={video.thumbnailHigh || video.thumbnail}
+													href={`/videos/${video._id}`}
+													isShort
+													isRecent={isRecent(video.publishedAt)}
+													metadata={[
+														{
+															label: "VISUALIZAÇÕES",
+															value: formatViews(video.viewCount),
+														},
+													]}
+												/>
+											</motion.div>
+										</CarouselItem>
+									))}
+								</CarouselContent>
+								<CarouselPrevious className="left-0 md:-left-12" />
+								<CarouselNext className="right-0 md:-right-12" />
+							</Carousel>
 						</div>
 					</section>
 				)}

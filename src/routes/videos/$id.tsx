@@ -120,12 +120,12 @@ function VideoDetail() {
 
 			<div className="grid lg:grid-cols-3 gap-8 md:gap-12">
 				{/* Main Content */}
-				<div className="lg:col-span-2 space-y-6 md:space-y-8">
+				<div className="lg:col-span-2 space-y-6 md:space-y-8 min-w-0">
 					<motion.div
 						initial={{ opacity: 0, y: 20 }}
 						animate={{ opacity: 1, y: 0 }}
 						className={cn(
-							"bg-black border-4 border-foreground shadow-[4px_4px_0px_0px_var(--foreground)] md:shadow-[8px_8px_0px_0px_var(--foreground)] overflow-hidden mx-auto",
+							"bg-black border-2 md:border-4 border-foreground shadow-[2px_2px_0px_0px_var(--foreground)] md:shadow-[8px_8px_0px_0px_var(--foreground)] overflow-hidden mx-auto",
 							isShort
 								? "aspect-[9/16] w-full max-w-[400px]" // Limit width for Shorts on desktop
 								: "aspect-video w-full",
@@ -231,6 +231,7 @@ function SidebarVideoCard({
 		<Link to="/videos/$id" params={{ id: video._id }} className="block group">
 			<PixelCard
 				hoverEffect
+				variant="compact"
 				className={cn(
 					"p-0 overflow-hidden flex gap-3 h-20 md:h-24 transition-all duration-200",
 					isPopular && "border-l-4 border-l-[#FFD700]",
@@ -253,7 +254,7 @@ function SidebarVideoCard({
 						</div>
 					)}
 				</div>
-				<div className="py-1.5 pr-2 flex-1 flex flex-col justify-center gap-1 min-w-0">
+				<div className="py-1 flex-1 flex flex-col justify-center gap-1 min-w-0 pr-1">
 					<h3 className="font-pixel text-xs md:text-sm line-clamp-2 group-hover:text-primary transition-colors leading-tight break-words">
 						{video.title}
 					</h3>
