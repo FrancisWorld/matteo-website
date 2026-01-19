@@ -24,10 +24,10 @@ export function PixelCard({
 			{...props}
 		>
 			{/* Corner accents */}
-			<div className="absolute top-2 left-2 w-2 h-2 md:w-3 md:h-3 4xl:w-4 4xl:h-4 bg-primary" />
-			<div className="absolute top-2 right-2 w-2 h-2 md:w-3 md:h-3 4xl:w-4 4xl:h-4 bg-primary" />
-			<div className="absolute bottom-2 left-2 w-2 h-2 md:w-3 md:h-3 4xl:w-4 4xl:h-4 bg-primary" />
-			<div className="absolute bottom-2 right-2 w-2 h-2 md:w-3 md:h-3 4xl:w-4 4xl:h-4 bg-primary" />
+			<div className="absolute top-2 left-2 w-2 h-2 md:w-3 md:h-3 4xl:w-4 4xl:h-4 bg-primary pointer-events-none z-0" />
+			<div className="absolute top-2 right-2 w-2 h-2 md:w-3 md:h-3 4xl:w-4 4xl:h-4 bg-primary pointer-events-none z-0" />
+			<div className="absolute bottom-2 left-2 w-2 h-2 md:w-3 md:h-3 4xl:w-4 4xl:h-4 bg-primary pointer-events-none z-0" />
+			<div className="absolute bottom-2 right-2 w-2 h-2 md:w-3 md:h-3 4xl:w-4 4xl:h-4 bg-primary pointer-events-none z-0" />
 			{children as React.ReactNode}
 		</motion.div>
 	);
