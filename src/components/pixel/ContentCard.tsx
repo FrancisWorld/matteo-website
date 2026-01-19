@@ -48,7 +48,7 @@ export function ContentCard({
 						/>
 						<div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60" />
 
-						<div className="absolute top-2 md:top-3 4xl:top-4 right-2 md:right-3 4xl:right-4 px-2 md:px-3 4xl:px-4 py-1 bg-black/80 text-white text-[10px] md:text-xs 4xl:text-sm font-pixel border border-white/20">
+						<div className="absolute top-2 md:top-3 4xl:top-4 right-2 md:right-3 4xl:right-4 px-2 md:px-3 4xl:px-4 py-1 bg-black/80 text-white text-[10px] md:text-xs 4xl:text-sm font-pixel border border-white/20 z-10">
 							{type.toUpperCase()}
 						</div>
 					</div>
