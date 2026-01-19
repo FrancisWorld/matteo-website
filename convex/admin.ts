@@ -50,6 +50,7 @@ export const deleteQuiz = mutation({
 export const promoteToAdmin = mutation({
 	args: { email: v.string() },
 	handler: async (ctx, args) => {
+		await checkAdmin(ctx);
 		const user = await ctx.db
 			.query("users")
 			.filter((q) => q.eq(q.field("email"), args.email))
