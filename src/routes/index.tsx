@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "convex/react";
-import { BookOpen, ChevronRight, Trophy, Youtube } from "lucide-react";
+import { BookOpen, ChevronRight, Eye, Trophy, Youtube } from "lucide-react";
 import { motion } from "motion/react";
 import { AnimatedText } from "@/components/pixel/AnimatedText";
 import { ContentCard } from "@/components/pixel/ContentCard";
@@ -11,13 +11,6 @@ import {
 	staggerContainer,
 } from "@/components/pixel/PageWrapper";
 import { PixelButton } from "@/components/pixel/PixelButton";
-import {
-	Carousel,
-	CarouselContent,
-	CarouselItem,
-	CarouselNext,
-	CarouselPrevious,
-} from "@/components/ui/carousel";
 import { api } from "../../convex/_generated/api";
 
 export const Route = createFileRoute("/")({
@@ -174,7 +167,8 @@ function Home() {
 											thumbnail={video.thumbnailHigh || video.thumbnail}
 											metadata={[
 												{
-													label: "VISUALIZAÇÕES",
+													label: "",
+													icon: <Eye className="w-3 h-3 md:w-3.5 md:h-3.5" />,
 													value: video.viewCount.toLocaleString(),
 												},
 											]}
