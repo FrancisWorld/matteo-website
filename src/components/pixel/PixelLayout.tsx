@@ -289,13 +289,13 @@ export function PixelLayout({ children }: { children: React.ReactNode }) {
 					<div className="border-t-2 border-[#222] pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-600 gap-4">
 						<div className="flex gap-6 font-body">
 							<Link
-								to="/"
+								to="/privacy"
 								className="hover:text-primary transition-colors text-sm"
 							>
 								Política de Privacidade
 							</Link>
 							<Link
-								to="/"
+								to="/terms"
 								className="hover:text-primary transition-colors text-sm"
 							>
 								Termos de Serviço
