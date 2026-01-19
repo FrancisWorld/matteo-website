@@ -151,27 +151,21 @@ function VideoDetail() {
 						<div className="flex flex-wrap gap-2 md:gap-4 text-[10px] md:text-sm font-pixel text-muted-foreground border-b-2 border-muted pb-4 md:pb-6">
 							<div className="flex items-center gap-1.5 md:gap-2 bg-muted/20 px-2 md:px-3 py-1 md:py-1.5 border border-muted">
 								<Eye className="w-3 h-3 md:w-4 md:h-4" />
-								<span>
-									{video.viewCount.toLocaleString()}{" "}
-									<span className="hidden sm:inline">VISUALIZAÇÕES</span>
-									<span className="sm:hidden">VIEWS</span>
-								</span>
+								<span>{video.viewCount.toLocaleString()}</span>
 							</div>
 							<div className="flex items-center gap-1.5 md:gap-2 bg-muted/20 px-2 md:px-3 py-1 md:py-1.5 border border-muted">
 								<ThumbsUp className="w-3 h-3 md:w-4 md:h-4" />
-								<span>{video.likeCount?.toLocaleString() || 0} LIKES</span>
+								<span>{video.likeCount?.toLocaleString() || 0}</span>
 							</div>
 							<div className="flex items-center gap-1.5 md:gap-2 bg-muted/20 px-2 md:px-3 py-1 md:py-1.5 border border-muted">
 								<MessageSquare className="w-3 h-3 md:w-4 md:h-4" />
-								<span>
-									{video.commentCount?.toLocaleString() || 0}{" "}
-									<span className="hidden sm:inline">COMENTÁRIOS</span>
-									<span className="sm:hidden">COMS</span>
-								</span>
+								<span>{video.commentCount?.toLocaleString() || 0}</span>
 							</div>
 							<div className="flex items-center gap-1.5 md:gap-2 ml-auto bg-primary/10 px-2 md:px-3 py-1 md:py-1.5 border border-primary/20 text-primary">
 								<Calendar className="w-3 h-3 md:w-4 md:h-4" />
-								<span>{new Date(video.publishedAt).toLocaleDateString()}</span>
+								<span>
+									{new Date(video.publishedAt).toLocaleDateString("pt-BR")}
+								</span>
 							</div>
 						</div>
 
@@ -231,7 +225,6 @@ function SidebarVideoCard({
 		<Link to="/videos/$id" params={{ id: video._id }} className="block group">
 			<PixelCard
 				hoverEffect
-				variant="compact"
 				className={cn(
 					"p-0 overflow-hidden flex gap-3 h-20 md:h-24 transition-all duration-200",
 					isPopular && "border-l-4 border-l-[#FFD700]",
@@ -267,7 +260,7 @@ function SidebarVideoCard({
 						</span>
 						{!isPopular && (
 							<span className="flex items-center gap-1 ml-auto">
-								{new Date(video.publishedAt).toLocaleDateString(undefined, {
+								{new Date(video.publishedAt).toLocaleDateString("pt-BR", {
 									month: "numeric",
 									day: "numeric",
 								})}
