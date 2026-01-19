@@ -1,16 +1,37 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useMutation } from "convex/react";
-import { Camera, Save, User } from "lucide-react";
+import { AlertCircle, Camera, CheckCircle2, Save, User } from "lucide-react";
 import { useRef, useState } from "react";
 import { PageTitle } from "@/components/pixel/AnimatedText";
 import { MinecraftSkinViewer } from "@/components/pixel/MinecraftSkinViewer";
 import { PageWrapper } from "@/components/pixel/PageWrapper";
 import { PixelButton } from "@/components/pixel/PixelButton";
 import { PixelCard } from "@/components/pixel/PixelCard";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authQueryOptions } from "@/lib/auth-query";
 import { api } from "../../convex/_generated/api";
+
+// Traduz mensagens de erro para pt-BR amigável
+function translateError(error: string): string {
+	if (error.includes("Wait 1 minute")) {
+		return "Aguarde 1 minuto antes de atualizar novamente";
+	}
+	if (error.includes("Unauthorized") || error.includes("expired")) {
+		return "Sua sessão expirou. Faça login novamente";
+	}
+	if (error.includes("User not found")) {
+		return "Usuário não encontrado";
+	}
+	if (error.includes("banned")) {
+		return "Sua conta está suspensa";
+	}
+	if (error.includes("Upload failed")) {
+		return "Falha no upload da imagem. Tente novamente";
+	}
+	return error;
+}
 
 export const Route = createFileRoute("/settings")({
 	beforeLoad: async ({ context, location }) => {
@@ -46,13 +67,17 @@ function SettingsPage() {
 	const [feedback, setFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
+	const showFeedback = (type: "success" | "error", message: string) => {
+		setFeedback({ type, message });
+		setTimeout(() => setFeedback(null), type === "success" ? 3000 : 5000);
+	};
+
 	const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
 		if (!file) return;
 
 		if (file.size > 5 * 1024 * 1024) {
-			setFeedback({ type: "error", message: "A imagem deve ter no máximo 5MB" });
-			setTimeout(() => setFeedback(null), 4000);
+			showFeedback("error", "A imagem deve ter no máximo 5MB");
 			return;
 		}
 
@@ -72,13 +97,12 @@ function SettingsPage() {
 
 			await updateAvatar({ storageId, token });
 
-			setFeedback({ type: "success", message: "Avatar atualizado com sucesso!" });
+			showFeedback("success", "Avatar atualizado! Recarregando...");
 			setTimeout(() => window.location.reload(), 1500);
 		} catch (error) {
 			console.error(error);
-			const errorMessage = error instanceof Error ? error.message : "Falha ao atualizar avatar";
-			setFeedback({ type: "error", message: errorMessage });
-			setTimeout(() => setFeedback(null), 4000);
+			const errorMessage = error instanceof Error ? error.message : "Falha ao atualizar";
+			showFeedback("error", translateError(errorMessage));
 		} finally {
 			setIsUploading(false);
 		}
@@ -89,13 +113,12 @@ function SettingsPage() {
 		setIsSavingUsername(true);
 		try {
 			await updateMcUsername({ username: mcUsername, token });
-			setFeedback({ type: "success", message: "Username salvo com sucesso!" });
+			showFeedback("success", "Username salvo! Recarregando...");
 			setTimeout(() => window.location.reload(), 1500);
 		} catch (error) {
 			console.error(error);
-			const errorMessage = error instanceof Error ? error.message : "Erro ao salvar username";
-			setFeedback({ type: "error", message: errorMessage });
-			setTimeout(() => setFeedback(null), 4000);
+			const errorMessage = error instanceof Error ? error.message : "Erro ao salvar";
+			showFeedback("error", translateError(errorMessage));
 		} finally {
 			setIsSavingUsername(false);
 		}
@@ -104,15 +127,24 @@ function SettingsPage() {
 	return (
 		<PageWrapper>
 			{feedback && (
-				<div
-					className={`mb-6 p-4 rounded-lg border-l-4 font-body ${
+				<Alert
+					variant={feedback.type === "error" ? "destructive" : "default"}
+					className={`mb-6 ${
 						feedback.type === "success"
-							? "bg-green-500/10 border-green-500 text-green-700"
-							: "bg-red-500/10 border-red-500 text-red-700"
+							? "border-green-500 bg-green-500/10 text-green-500"
+							: ""
 					}`}
 				>
-					{feedback.message}
-				</div>
+					{feedback.type === "success" ? (
+						<CheckCircle2 className="h-4 w-4" />
+					) : (
+						<AlertCircle className="h-4 w-4" />
+					)}
+					<AlertTitle>
+						{feedback.type === "success" ? "Sucesso!" : "Ops!"}
+					</AlertTitle>
+					<AlertDescription>{feedback.message}</AlertDescription>
+				</Alert>
 			)}
 			<PageTitle subtitle="Gerencie seu perfil e preferências">
 				CONFIGURAÇÕES
