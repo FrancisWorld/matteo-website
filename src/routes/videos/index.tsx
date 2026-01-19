@@ -66,7 +66,7 @@ function VideosIndex() {
 	return (
 		<PageWrapper>
 			<div className="space-y-8 md:space-y-12 3xl:space-y-16">
-				<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 md:gap-4">
+				<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 md:gap-4 px-1 md:px-0">
 					<h1 className="text-2xl sm:text-3xl md:text-4xl 3xl:text-5xl 4xl:text-6xl font-pixel text-white">
 						VÍDEOS
 					</h1>
@@ -90,7 +90,7 @@ function VideosIndex() {
 
 				{/* VIDEOS SECTION */}
 				<section className="space-y-4 md:space-y-6">
-					<h2 className="text-xl md:text-2xl 3xl:text-3xl font-pixel text-white pixel-text-shadow">
+					<h2 className="text-xl md:text-2xl 3xl:text-3xl font-pixel text-white pixel-text-shadow px-1 md:px-0">
 						TODOS OS VÍDEOS
 					</h2>
 					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6 gap-4 md:gap-6">
@@ -155,13 +155,15 @@ function VideosIndex() {
 				{/* SHORTS CAROUSEL SECTION */}
 				{shorts && shorts.length > 0 && !search && (
 					<section className="space-y-4 md:space-y-6 pt-8 md:pt-12 border-t-4 border-muted/30">
-						<h2 className="text-xl md:text-2xl 3xl:text-3xl font-pixel text-red-500 pixel-text-shadow flex items-center gap-2">
+						<h2 className="text-xl md:text-2xl 3xl:text-3xl font-pixel text-red-500 pixel-text-shadow flex items-center gap-2 px-1 md:px-0">
 							SHORTS <span className="text-white text-sm">⚡</span>
 						</h2>
 
 						<div className="relative">
+							{/* Gradient Masks */}
 							<div className="absolute left-0 top-0 bottom-0 w-8 md:w-16 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
 							<div className="absolute right-0 top-0 bottom-0 w-8 md:w-16 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+
 							<div className="px-8 md:px-12">
 								<Carousel
 									opts={{
@@ -180,6 +182,7 @@ function VideosIndex() {
 													initial={{ opacity: 0, scale: 0.9 }}
 													animate={{ opacity: 1, scale: 1 }}
 													transition={{ delay: i * 0.05 }}
+													className="h-full"
 												>
 													<ContentCard
 														title={video.title}
@@ -194,13 +197,14 @@ function VideosIndex() {
 																value: formatViews(video.viewCount),
 															},
 														]}
+														// Ensure shadow is on the card itself via PixelCard which is used inside ContentCard
 													/>
 												</motion.div>
 											</CarouselItem>
 										))}
 									</CarouselContent>
-									<CarouselPrevious className="left-0 md:-left-12 h-10 w-10 border-2 border-foreground bg-background hover:bg-muted text-foreground rounded-none pixel-shadow-3d" />
-									<CarouselNext className="right-0 md:-right-12 h-10 w-10 border-2 border-foreground bg-background hover:bg-muted text-foreground rounded-none pixel-shadow-3d" />
+									<CarouselPrevious className="left-0 md:-left-12 h-10 w-10 border-2 border-foreground bg-background hover:bg-primary hover:text-white transition-colors rounded-none pixel-shadow-3d z-20" />
+									<CarouselNext className="right-0 md:-right-12 h-10 w-10 border-2 border-foreground bg-background hover:bg-primary hover:text-white transition-colors rounded-none pixel-shadow-3d z-20" />
 								</Carousel>
 							</div>
 						</div>

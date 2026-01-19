@@ -23,7 +23,9 @@ export function PixelCard({
 			}
 			className={cn(
 				"bg-card text-card-foreground border-2 border-foreground relative",
-				"p-4 shadow-[3px_3px_0px_0px_var(--foreground)]",
+				// Removed default shadow from here to control it per instance or add it back selectively
+				// Added a default shadow that is cleaner
+				"p-4 shadow-[2px_2px_0px_0px_var(--foreground)] md:shadow-[3px_3px_0px_0px_var(--foreground)]",
 				className,
 			)}
 			{...props}

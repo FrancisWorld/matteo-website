@@ -33,18 +33,19 @@ export function ContentCard({
 				hoverEffect
 				className={cn(
 					"h-full p-0 overflow-hidden flex flex-col relative",
+					// Apply shadow here specifically if needed or rely on PixelCard default
 					isMostViewed && "enchanted ring-2 ring-purple-500",
 					isRecent && "gold-glow ring-2 ring-[#FFD700]",
 					className,
 				)}
 			>
 				{isRecent && (
-					<div className="absolute top-0 right-0 z-20 bg-gradient-to-br from-[#FFD700] to-[#FFA500] text-black text-[10px] font-pixel px-2 py-1 border-b-2 border-l-2 border-black shadow-[2px_2px_0_rgba(0,0,0,0.5)] animate-bounce">
+					<div className="absolute top-0 right-0 z-20 bg-gradient-to-br from-[#FFD700] to-[#FFA500] text-black text-[9px] md:text-[10px] font-pixel px-1.5 py-0.5 md:px-2 md:py-1 border-b-2 border-l-2 border-black shadow-[1px_1px_0_rgba(0,0,0,0.5)] animate-bounce">
 						NOVO
 					</div>
 				)}
 				{isMostViewed && (
-					<div className="absolute top-0 right-0 z-20 bg-gradient-to-br from-purple-500 to-indigo-600 text-white text-[10px] font-pixel px-2 py-1 border-b-2 border-l-2 border-black shadow-[2px_2px_0_rgba(0,0,0,0.5)]">
+					<div className="absolute top-0 right-0 z-20 bg-gradient-to-br from-purple-500 to-indigo-600 text-white text-[9px] md:text-[10px] font-pixel px-1.5 py-0.5 md:px-2 md:py-1 border-b-2 border-l-2 border-black shadow-[1px_1px_0_rgba(0,0,0,0.5)]">
 						POPULAR
 					</div>
 				)}
@@ -65,17 +66,19 @@ export function ContentCard({
 						/>
 						<div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60" />
 
-						<div className="absolute top-2 md:top-3 right-2 md:right-3 px-2 py-1 bg-black/80 text-white text-[10px] font-pixel border border-white/20 z-10">
+						<div className="absolute top-2 md:top-3 right-2 md:right-3 px-1.5 py-0.5 md:px-2 md:py-1 bg-black/80 text-white text-[9px] md:text-[10px] font-pixel border border-white/20 z-10">
 							{isShort ? "SHORT" : type.toUpperCase()}
 						</div>
 					</div>
 				)}
 
-				<div className="p-4 flex-1 flex flex-col gap-3">
+				<div className="p-3 md:p-4 flex-1 flex flex-col gap-2 md:gap-3">
 					<h3
 						className={cn(
 							"font-pixel leading-tight group-hover:text-primary transition-colors line-clamp-2",
-							isShort ? "text-sm md:text-base" : "text-base md:text-lg",
+							isShort
+								? "text-xs md:text-sm"
+								: "text-sm md:text-base lg:text-lg",
 						)}
 					>
 						{title}
@@ -87,7 +90,7 @@ export function ContentCard({
 						</p>
 					)}
 
-					<div className="mt-auto pt-3 flex justify-between items-center gap-2 text-[10px] md:text-xs text-muted-foreground font-pixel border-t border-white/10">
+					<div className="mt-auto pt-2 md:pt-3 flex justify-between items-center gap-2 text-[9px] md:text-[10px] text-muted-foreground font-pixel border-t border-white/10">
 						{metadata?.map((meta) => (
 							<span key={meta.label} className="whitespace-nowrap">
 								{meta.value} {meta.label}
