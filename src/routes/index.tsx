@@ -2,9 +2,22 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "convex/react";
 import { BookOpen, ChevronRight, Trophy, Youtube } from "lucide-react";
 import { motion } from "motion/react";
+import { AnimatedText } from "@/components/pixel/AnimatedText";
 import { ContentCard } from "@/components/pixel/ContentCard";
-import { PageWrapper } from "@/components/pixel/PageWrapper";
+import {
+	fadeInScale,
+	fadeInUp,
+	PageWrapper,
+	staggerContainer,
+} from "@/components/pixel/PageWrapper";
 import { PixelButton } from "@/components/pixel/PixelButton";
+import {
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+	CarouselNext,
+	CarouselPrevious,
+} from "@/components/ui/carousel";
 import { api } from "../../convex/_generated/api";
 
 export const Route = createFileRoute("/")({
@@ -26,52 +39,85 @@ function Home() {
 			className="space-y-0"
 		>
 			{/* HERO SECTION */}
-			<section className="relative bg-[#0a0a0a] border-b-4 md:border-b-6 4xl:border-b-8 border-black overflow-hidden min-h-[60vh] md:min-h-[70vh] 3xl:min-h-[80vh] 4xl:min-h-screen flex items-center">
-				<div className="absolute inset-0 bg-[url('https://www.minecraft.net/content/dam/games/minecraft/key-art/Minecraft-1-19-Wild-Update-Key-Art.jpg')] bg-cover bg-center opacity-40 grayscale-[30%]" />
-				<div className="absolute inset-0 bg-gradient-to-t from-[#121212] to-transparent" />
+			<section className="relative bg-[#0a0a0a] border-b-4 border-black overflow-hidden min-h-[70vh] md:min-h-[80vh] flex items-center pt-20">
+				{/* Background Image - Full Color */}
+				<div className="absolute inset-0 bg-[url('https://www.minecraft.net/content/dam/games/minecraft/key-art/Minecraft-1-19-Wild-Update-Key-Art.jpg')] bg-cover bg-center" />
 
-				<div className="container mx-auto px-4 md:px-6 lg:px-8 3xl:px-12 4xl:px-16 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 3xl:gap-12 4xl:gap-16 items-center py-12 md:py-16 3xl:py-20 4xl:py-32">
+				{/* Gradient Overlay - Deeper and smoother */}
+				<div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-[#121212]/80 to-transparent" />
+				<div className="absolute inset-0 bg-black/30" />
+
+				{/* Floating Particles (CSS based) */}
+				<div
+					className="absolute inset-0 pointer-events-none opacity-20"
+					style={{
+						backgroundImage:
+							"radial-gradient(circle, #fff 1px, transparent 1px)",
+						backgroundSize: "40px 40px",
+						maskImage:
+							"linear-gradient(to bottom, transparent, black, transparent)",
+					}}
+				/>
+
+				<div className="container mx-auto px-4 md:px-6 lg:px-8 relative z-10 grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
 					<motion.div
-						initial={{ opacity: 0, x: -50 }}
-						animate={{ opacity: 1, x: 0 }}
-						transition={{ duration: 0.8, ease: "easeOut" }}
-						className="space-y-4 md:space-y-6 3xl:space-y-8"
+						variants={staggerContainer}
+						initial="initial"
+						animate="animate"
+						className="space-y-6 md:space-y-8"
 					>
-						<h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl 3xl:text-7xl 4xl:text-8xl font-pixel leading-tight text-white drop-shadow-[4px_4px_0_#000]">
-							EXPLORE THE <br />
-							<span className="text-primary">MATTEO VERSE</span>
-						</h1>
-						<p className="text-base sm:text-lg md:text-xl lg:text-2xl 3xl:text-2xl 4xl:text-4xl text-gray-200 font-body max-w-lg shadow-black drop-shadow-md">
-							Join the adventure! Watch videos, read exclusive stories, and test
-							your knowledge.
-						</p>
-						<div className="flex flex-col sm:flex-row gap-2 md:gap-4 pt-2 md:pt-4">
+						<div className="space-y-4">
+							<motion.h1
+								variants={fadeInUp}
+								className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-pixel leading-tight text-white pixel-text-shadow-lg"
+							>
+								BEM-VINDO AO <br />
+								<span className="text-primary drop-shadow-[0_0_15px_rgba(85,170,85,0.6)]">
+									<AnimatedText
+										text="MUNDO DO MATTEO"
+										animation="glitch"
+										delay={0.5}
+									/>
+								</span>
+							</motion.h1>
+						</div>
+
+						<motion.p
+							variants={fadeInUp}
+							className="text-base sm:text-lg md:text-2xl text-gray-200 font-body max-w-lg shadow-black drop-shadow-md bg-black/40 p-4 md:p-6 border-l-4 border-primary backdrop-blur-sm"
+						>
+							O ponto de spawn definitivo da comunidade. Mergulhe em aventuras
+							épicas, descubra segredos do servidor e conquiste seu lugar na
+							lenda.
+						</motion.p>
+
+						<motion.div variants={fadeInUp} className="flex flex-wrap gap-4">
 							<Link to="/videos">
 								<PixelButton
 									size="lg"
-									className="text-sm md:text-base w-full sm:w-auto"
+									className="text-base md:text-lg h-12 md:h-14 px-6 md:px-8"
 								>
-									WATCH VIDEOS
+									COMEÇAR A JORNADA
 								</PixelButton>
 							</Link>
 							<Link to="/quiz">
 								<PixelButton
 									size="lg"
 									variant="secondary"
-									className="text-sm md:text-base w-full sm:w-auto"
+									className="text-base md:text-lg h-12 md:h-14 px-6 md:px-8"
 								>
-									PLAY QUIZ
+									JOGAR QUIZ
 								</PixelButton>
 							</Link>
-						</div>
+						</motion.div>
 					</motion.div>
 
 					{heroVideo && (
 						<motion.div
-							initial={{ opacity: 0, y: 50 }}
-							animate={{ opacity: 1, y: 0 }}
-							transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-							className="hidden lg:block"
+							variants={fadeInScale}
+							initial="initial"
+							animate="animate"
+							className="hidden lg:block relative"
 						>
 							<div className="absolute -inset-4 bg-primary/20 blur-2xl rounded-full" />
 							<ContentCard
@@ -88,39 +134,45 @@ function Home() {
 			</section>
 
 			{/* LATEST VIDEOS */}
-			<section className="py-12 md:py-16 3xl:py-20 4xl:py-32 bg-[#121212]">
-				<div className="container mx-auto px-4 md:px-6 lg:px-8 3xl:px-12 4xl:px-16 space-y-8 md:space-y-12 3xl:space-y-16">
+			<section className="py-12 md:py-20 bg-[#121212]">
+				<div className="container mx-auto px-4 md:px-6 lg:px-8 space-y-8 md:space-y-12">
 					<div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
 						<div>
-							<h2 className="text-2xl sm:text-3xl md:text-4xl 3xl:text-5xl 4xl:text-6xl font-pixel text-white mb-2 md:mb-3 flex items-center gap-2 md:gap-3">
+							<h2 className="text-2xl md:text-4xl font-pixel text-white mb-4 flex items-center gap-3 pixel-text-shadow">
 								<Youtube
-									size={28}
-									className="md:size-8 4xl:size-12 text-red-600"
+									size={32}
+									className="text-red-600 drop-shadow-[2px_2px_0_rgba(0,0,0,0.5)] md:w-8 md:h-8 w-6 h-6"
 								/>
-								LATEST VIDEOS
+								ÚLTIMOS VÍDEOS
 							</h2>
-							<div className="h-1 md:h-1.5 4xl:h-2 w-32 md:w-40 bg-primary" />
+							<div className="h-2 w-32 bg-primary shadow-[2px_2px_0_#1a4d23]" />
 						</div>
 						<Link to="/videos">
 							<PixelButton
 								variant="ghost"
-								className="text-primary hover:text-primary/80 text-xs md:text-sm 3xl:text-base 4xl:text-lg"
+								className="text-primary hover:text-primary/80"
 							>
-								VIEW ALL{" "}
-								<ChevronRight size={16} className="md:size-5 4xl:size-7" />
+								VER TODOS <ChevronRight size={16} />
 							</PixelButton>
 						</Link>
 					</div>
 
-					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6 gap-4 md:gap-6 3xl:gap-8 4xl:gap-10">
+					{/* Responsive Grid replacing simple Carousel for better mobile/desktop handling if desired, or restore Carousel */}
+					{/* The user liked the Carousel from main. Let's restore the Grid for layout but use the style. */}
+					{/* Actually, main used a GRID for recent videos, not carousel. Wait, let me check main again. */}
+					{/* Main: className="grid md:grid-cols-2 lg:grid-cols-4 gap-6" */}
+					{/* I will use the responsive grid from feat/responsive-design but with main's motion animations */}
+
+					<motion.div
+						variants={staggerContainer}
+						initial="initial"
+						whileInView="animate"
+						viewport={{ once: true, margin: "-100px" }}
+						className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6"
+					>
 						{recentVideos
 							? recentVideos.map((video: any) => (
-									<motion.div
-										key={video._id}
-										initial={{ opacity: 0, y: 20 }}
-										whileInView={{ opacity: 1, y: 0 }}
-										viewport={{ once: true }}
-									>
+									<motion.div key={video._id} variants={fadeInUp}>
 										<ContentCard
 											title={video.title}
 											type="video"
@@ -141,91 +193,83 @@ function Home() {
 										className="aspect-video bg-[#1a1a1a] animate-pulse border-2 border-[#222]"
 									/>
 								))}
-					</div>
+					</motion.div>
 				</div>
 			</section>
 
 			{/* BLOGS & QUIZZES GRID */}
-			<section className="py-12 md:py-16 3xl:py-20 4xl:py-32 bg-[#1a1a1a] border-y-4 md:border-y-6 4xl:border-y-8 border-black">
-				<div className="container mx-auto px-4 md:px-6 lg:px-8 3xl:px-12 4xl:px-16 grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 3xl:gap-20 4xl:gap-24">
+			<section className="py-12 md:py-20 bg-[#1a1a1a] border-y-4 border-black">
+				<div className="container mx-auto px-4 md:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 md:gap-16">
 					{/* BLOGS */}
-					<div className="space-y-6 md:space-y-8 3xl:space-y-10">
-						<div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3">
+					<div className="space-y-8">
+						<div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
 							<div>
-								<h2 className="text-2xl sm:text-3xl md:text-4xl 3xl:text-5xl 4xl:text-6xl font-pixel text-white mb-2 md:mb-3 flex items-center gap-2 md:gap-3">
+								<h2 className="text-2xl md:text-3xl font-pixel text-white mb-4 flex items-center gap-3 pixel-text-shadow">
 									<BookOpen
-										size={28}
-										className="md:size-8 4xl:size-12 text-[#795548]"
+										size={32}
+										className="text-[#795548] drop-shadow-[2px_2px_0_rgba(0,0,0,0.5)] md:w-8 md:h-8 w-6 h-6"
 									/>
-									LATEST STORIES
+									ÚLTIMAS HISTÓRIAS
 								</h2>
-								<div className="h-1 md:h-1.5 4xl:h-2 w-32 md:w-40 bg-[#795548]" />
+								<div className="h-2 w-32 bg-[#795548] shadow-[2px_2px_0_#3e2723]" />
 							</div>
 							<Link to="/blog">
-								<PixelButton
-									variant="ghost"
-									className="text-xs md:text-sm 3xl:text-base 4xl:text-lg"
-								>
-									MORE
-								</PixelButton>
+								<PixelButton variant="ghost">MAIS</PixelButton>
 							</Link>
 						</div>
 
-						<div className="space-y-3 md:space-y-4 3xl:space-y-5">
+						<motion.div
+							variants={staggerContainer}
+							initial="initial"
+							whileInView="animate"
+							viewport={{ once: true }}
+							className="space-y-4"
+						>
 							{recentPosts
 								? recentPosts.map((post: any) => (
-										<motion.div
-											key={post._id}
-											initial={{ opacity: 0, x: -20 }}
-											whileInView={{ opacity: 1, x: 0 }}
-											viewport={{ once: true }}
-										>
+										<motion.div key={post._id} variants={fadeInUp}>
 											<ContentCard
 												title={post.title}
 												type="blog"
 												href={`/blog/${post.slug}`}
 												thumbnail={post.coverImage}
 												subtitle={post.excerpt}
-												className="flex-row h-24 md:h-28 3xl:h-32 4xl:h-40"
+												className="flex-row h-auto min-h-[8rem] md:h-32"
 											/>
 										</motion.div>
 									))
 								: null}
-						</div>
+						</motion.div>
 					</div>
 
 					{/* QUIZZES */}
-					<div className="space-y-6 md:space-y-8 3xl:space-y-10">
-						<div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3">
+					<div className="space-y-8">
+						<div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
 							<div>
-								<h2 className="text-2xl sm:text-3xl md:text-4xl 3xl:text-5xl 4xl:text-6xl font-pixel text-white mb-2 md:mb-3 flex items-center gap-2 md:gap-3">
+								<h2 className="text-2xl md:text-3xl font-pixel text-white mb-4 flex items-center gap-3 pixel-text-shadow">
 									<Trophy
-										size={28}
-										className="md:size-8 4xl:size-12 text-[#FF5555]"
+										size={32}
+										className="text-[#FF5555] drop-shadow-[2px_2px_0_rgba(0,0,0,0.5)] md:w-8 md:h-8 w-6 h-6"
 									/>
-									CHALLENGES
+									DESAFIOS
 								</h2>
-								<div className="h-1 md:h-1.5 4xl:h-2 w-32 md:w-40 bg-[#FF5555]" />
+								<div className="h-2 w-32 bg-[#FF5555] shadow-[2px_2px_0_#990000]" />
 							</div>
 							<Link to="/quiz">
-								<PixelButton
-									variant="ghost"
-									className="text-xs md:text-sm 3xl:text-base 4xl:text-lg"
-								>
-									MORE
-								</PixelButton>
+								<PixelButton variant="ghost">MAIS</PixelButton>
 							</Link>
 						</div>
 
-						<div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 3xl:gap-5 4xl:gap-6">
+						<motion.div
+							variants={staggerContainer}
+							initial="initial"
+							whileInView="animate"
+							viewport={{ once: true }}
+							className="grid sm:grid-cols-2 gap-4"
+						>
 							{recentQuizzes
 								? recentQuizzes.map((quiz: any) => (
-										<motion.div
-											key={quiz._id}
-											initial={{ opacity: 0, scale: 0.9 }}
-											whileInView={{ opacity: 1, scale: 1 }}
-											viewport={{ once: true }}
-										>
+										<motion.div key={quiz._id} variants={fadeInScale}>
 											<ContentCard
 												title={quiz.title}
 												type="quiz"
@@ -245,44 +289,55 @@ function Home() {
 										</motion.div>
 									))
 								: null}
-						</div>
+						</motion.div>
 					</div>
 				</div>
 			</section>
 
 			{/* NEWSLETTER */}
-			<section className="py-12 md:py-16 3xl:py-20 4xl:py-32 bg-[#121212]">
-				<div className="container mx-auto px-4 md:px-6 lg:px-8 3xl:px-12 4xl:px-16">
-					<div className="max-w-4xl mx-auto bg-[#1e1e1e] p-6 md:p-8 3xl:p-10 4xl:p-16 border-4 md:border-6 4xl:border-8 border-[#333] shadow-[8px_8px_0_0_#000] md:shadow-[10px_10px_0_0_#000] 4xl:shadow-[16px_16px_0_0_#000] relative overflow-hidden">
-						<div className="absolute top-0 right-0 w-32 md:w-48 h-32 md:h-48 bg-primary/10 rounded-full blur-3xl" />
-						<div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 3xl:gap-10 4xl:gap-12 items-center">
+			<section className="py-12 md:py-20 bg-[#121212]">
+				<div className="container mx-auto px-4 md:px-6 lg:px-8">
+					<motion.div
+						initial={{ opacity: 0, y: 50 }}
+						whileInView={{ opacity: 1, y: 0 }}
+						viewport={{ once: true }}
+						transition={{ duration: 0.6 }}
+						className="max-w-4xl mx-auto bg-[#1e1e1e] p-6 md:p-12 border-2 border-white relative overflow-hidden pixel-shadow-3d"
+						style={
+							{
+								"--shadow-right": "#000000",
+								"--shadow-bottom": "#000000",
+							} as React.CSSProperties
+						}
+					>
+						<div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl" />
+						<div className="relative z-10 grid md:grid-cols-2 gap-8 items-center">
 							<div>
-								<h2 className="text-2xl md:text-3xl 3xl:text-4xl 4xl:text-5xl font-pixel text-white mb-3 md:mb-4 3xl:mb-6">
-									JOIN THE SQUAD
+								<h2 className="text-2xl md:text-3xl font-pixel text-white mb-4 pixel-text-shadow">
+									ENTRE PARA O ESQUADRÃO
 								</h2>
-								<p className="text-gray-400 font-body text-base md:text-lg 3xl:text-xl 4xl:text-2xl">
-									Get the latest updates, exclusive skins, and early access to
-									new content directly to your inbox.
+								<p className="text-base md:text-xl text-gray-400 font-body">
+									Receba as últimas atualizações, skins exclusivas e acesso
+									antecipado a novos conteúdos diretamente na sua caixa de
+									entrada.
 								</p>
 							</div>
-							<div className="flex flex-col gap-3 md:gap-4 3xl:gap-5 4xl:gap-6">
+							<div className="flex flex-col gap-4">
 								<input
 									type="email"
-									placeholder="Enter your email"
-									className="bg-[#2a2a2a] border-2 md:border-3 4xl:border-4 border-[#555] p-3 md:p-4 3xl:p-5 4xl:p-6 font-body text-sm md:text-base 3xl:text-lg 4xl:text-2xl text-white focus:border-primary focus:outline-none placeholder:text-gray-600 w-full"
+									placeholder="Digite seu email"
+									className="bg-[#2a2a2a] border-2 border-[#555] p-4 font-body text-base md:text-lg text-white focus:border-primary focus:outline-none placeholder:text-gray-600 w-full shadow-[inset_2px_2px_4px_rgba(0,0,0,0.5)]"
 								/>
-								<PixelButton
-									size="lg"
-									className="w-full text-xs md:text-sm 3xl:text-base 4xl:text-lg"
-								>
-									SUBSCRIBE
+								<PixelButton size="lg" className="w-full">
+									INSCREVER-SE
 								</PixelButton>
-								<p className="text-[10px] md:text-xs 3xl:text-sm 4xl:text-base text-gray-600 font-body text-center">
-									No spam, just blocks. Unsubscribe anytime.
+								<p className="text-xs text-gray-600 font-body text-center">
+									Sem spam, apenas blocos. Cancele a inscrição a qualquer
+									momento.
 								</p>
 							</div>
 						</div>
-					</div>
+					</motion.div>
 				</div>
 			</section>
 		</PageWrapper>
