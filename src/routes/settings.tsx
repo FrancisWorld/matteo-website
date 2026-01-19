@@ -43,6 +43,7 @@ function SettingsPage() {
 	const [isUploading, setIsUploading] = useState(false);
 	const [mcUsername, setMcUsername] = useState(user.minecraftUsername || "");
 	const [isSavingUsername, setIsSavingUsername] = useState(false);
+	const [feedback, setFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,7 +51,8 @@ function SettingsPage() {
 		if (!file) return;
 
 		if (file.size > 5 * 1024 * 1024) {
-			alert("A imagem deve ter no máximo 5MB");
+			setFeedback({ type: "error", message: "A imagem deve ter no máximo 5MB" });
+			setTimeout(() => setFeedback(null), 4000);
 			return;
 		}
 
@@ -70,11 +72,13 @@ function SettingsPage() {
 
 			await updateAvatar({ storageId, token });
 
-			window.location.reload();
+			setFeedback({ type: "success", message: "Avatar atualizado com sucesso!" });
+			setTimeout(() => window.location.reload(), 1500);
 		} catch (error) {
 			console.error(error);
 			const errorMessage = error instanceof Error ? error.message : "Falha ao atualizar avatar";
-			alert(errorMessage);
+			setFeedback({ type: "error", message: errorMessage });
+			setTimeout(() => setFeedback(null), 4000);
 		} finally {
 			setIsUploading(false);
 		}
@@ -85,11 +89,13 @@ function SettingsPage() {
 		setIsSavingUsername(true);
 		try {
 			await updateMcUsername({ username: mcUsername, token });
-			window.location.reload();
+			setFeedback({ type: "success", message: "Username salvo com sucesso!" });
+			setTimeout(() => window.location.reload(), 1500);
 		} catch (error) {
 			console.error(error);
 			const errorMessage = error instanceof Error ? error.message : "Erro ao salvar username";
-			alert(errorMessage);
+			setFeedback({ type: "error", message: errorMessage });
+			setTimeout(() => setFeedback(null), 4000);
 		} finally {
 			setIsSavingUsername(false);
 		}
@@ -97,6 +103,17 @@ function SettingsPage() {
 
 	return (
 		<PageWrapper>
+			{feedback && (
+				<div
+					className={`mb-6 p-4 rounded-lg border-l-4 font-body ${
+						feedback.type === "success"
+							? "bg-green-500/10 border-green-500 text-green-700"
+							: "bg-red-500/10 border-red-500 text-red-700"
+					}`}
+				>
+					{feedback.message}
+				</div>
+			)}
 			<PageTitle subtitle="Gerencie seu perfil e preferências">
 				CONFIGURAÇÕES
 			</PageTitle>
