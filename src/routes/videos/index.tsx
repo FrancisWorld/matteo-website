@@ -59,9 +59,9 @@ function VideosIndex() {
 
 	return (
 		<PageWrapper>
-			<div className="space-y-6 md:space-y-8 3xl:space-y-10 4xl:space-y-12">
+			<div className="space-y-8 md:space-y-12 3xl:space-y-16">
 				<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 md:gap-4">
-					<h1 className="text-2xl sm:text-3xl md:text-4xl 3xl:text-5xl 4xl:text-6xl font-pixel">
+					<h1 className="text-2xl sm:text-3xl md:text-4xl 3xl:text-5xl 4xl:text-6xl font-pixel text-white">
 						VIDEOS
 					</h1>
 					<div className="relative w-full sm:w-auto sm:max-w-sm md:max-w-md 3xl:max-w-lg 4xl:max-w-2xl">
@@ -82,48 +82,85 @@ function VideosIndex() {
 					</div>
 				</div>
 
-				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6 gap-3 md:gap-4 3xl:gap-5 4xl:gap-6">
-					{videos === undefined ? (
-						Array.from({ length: 6 }).map((_, i) => (
-							<div
-								key={`skeleton-${i}`}
-								className="aspect-video bg-muted animate-pulse border-2 md:border-3 4xl:border-4 border-muted"
-							/>
-						))
-					) : videos.length === 0 ? (
-						<div className="col-span-full text-center py-12 md:py-16 3xl:py-20 4xl:py-32">
-							<p className="text-xl md:text-2xl 3xl:text-3xl 4xl:text-4xl font-pixel text-muted-foreground">
-								NO VIDEOS FOUND
-							</p>
+				{/* SHORTS SECTION */}
+				{shorts && shorts.length > 0 && !search && (
+					<section className="space-y-4 md:space-y-6">
+						<h2 className="text-xl md:text-2xl 3xl:text-3xl font-pixel text-red-500 pixel-text-shadow flex items-center gap-2">
+							SHORTS <span className="text-white text-sm">⚡</span>
+						</h2>
+						<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 3xl:grid-cols-8 gap-3 md:gap-4">
+							{shorts.map((video: any, i: number) => (
+								<motion.div
+									key={video._id}
+									initial={{ opacity: 0, scale: 0.9 }}
+									animate={{ opacity: 1, scale: 1 }}
+									transition={{ delay: i * 0.05 }}
+								>
+									<ContentCard
+										title={video.title}
+										type="video"
+										thumbnail={video.thumbnailHigh || video.thumbnail}
+										href={`/videos/${video._id}`}
+										isShort
+										isRecent={isRecent(video.publishedAt)}
+										metadata={[
+											{ label: "VIEWS", value: formatViews(video.viewCount) },
+										]}
+									/>
+								</motion.div>
+							))}
 						</div>
-					) : (
-						videos.map((video: any, i: number) => (
-							<motion.div
-								key={video._id}
-								initial={{ opacity: 0, y: 20 }}
-								animate={{ opacity: 1, y: 0 }}
-								transition={{ delay: i * 0.05 }}
-								className="h-full"
-							>
-								<ContentCard
-									title={video.title}
-									type="video"
-									thumbnail={video.thumbnailHigh || video.thumbnail}
-									href={`/videos/${video._id}`}
-									isMostViewed={isMostViewed(video._id)}
-									isRecent={isRecent(video.publishedAt)}
-									metadata={[
-										{ label: "VIEWS", value: formatViews(video.viewCount) },
-										{
-											label: "AGO",
-											value: new Date(video.publishedAt).toLocaleDateString(),
-										},
-									]}
+					</section>
+				)}
+
+				{/* VIDEOS SECTION */}
+				<section className="space-y-4 md:space-y-6">
+					<h2 className="text-xl md:text-2xl 3xl:text-3xl font-pixel text-white pixel-text-shadow">
+						ALL VIDEOS
+					</h2>
+					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6 gap-3 md:gap-4 3xl:gap-5 4xl:gap-6">
+						{videos === undefined ? (
+							Array.from({ length: 6 }).map((_, i) => (
+								<div
+									key={`skeleton-${i}`}
+									className="aspect-video bg-muted animate-pulse border-2 md:border-3 4xl:border-4 border-muted"
 								/>
-							</motion.div>
-						))
-					)}
-				</div>
+							))
+						) : videos.length === 0 ? (
+							<div className="col-span-full text-center py-12 md:py-16 3xl:py-20 4xl:py-32">
+								<p className="text-xl md:text-2xl 3xl:text-3xl 4xl:text-4xl font-pixel text-muted-foreground">
+									NO VIDEOS FOUND
+								</p>
+							</div>
+						) : (
+							videos.map((video: any, i: number) => (
+								<motion.div
+									key={video._id}
+									initial={{ opacity: 0, y: 20 }}
+									animate={{ opacity: 1, y: 0 }}
+									transition={{ delay: i * 0.05 }}
+									className="h-full"
+								>
+									<ContentCard
+										title={video.title}
+										type="video"
+										thumbnail={video.thumbnailHigh || video.thumbnail}
+										href={`/videos/${video._id}`}
+										isMostViewed={isMostViewed(video._id)}
+										isRecent={isRecent(video.publishedAt)}
+										metadata={[
+											{ label: "VIEWS", value: formatViews(video.viewCount) },
+											{
+												label: "AGO",
+												value: new Date(video.publishedAt).toLocaleDateString(),
+											},
+										]}
+									/>
+								</motion.div>
+							))
+						)}
+					</div>
+				</section>
 
 				{videos && videos.length > 0 && !search && (
 					<div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-8 md:mt-12 pt-6 md:pt-8 border-t-2 md:border-t-3 4xl:border-t-4 border-muted">
