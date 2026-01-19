@@ -27,9 +27,9 @@ export function PixelButton({
 	};
 
 	const sizes = {
-		sm: "h-8 px-3 text-xs",
-		md: "h-10 px-4 text-sm",
-		lg: "h-12 px-8 text-base",
+		sm: "h-11 md:h-9 px-3 md:px-4 text-xs md:text-xs 4xl:h-12 4xl:text-sm",
+		md: "h-12 md:h-10 px-4 md:px-5 text-sm md:text-sm 4xl:h-14 4xl:px-6 4xl:text-base",
+		lg: "h-14 md:h-12 px-6 md:px-7 text-base md:text-base 4xl:h-16 4xl:px-10 4xl:text-lg",
 	};
 
 	// Determine shadow colors based on variant

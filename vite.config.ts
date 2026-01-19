@@ -12,7 +12,19 @@ const config = defineConfig({
     viteTsConfigPaths({
       projects: ['./tsconfig.json'],
     }),
-    tailwindcss(),
+    tailwindcss({
+      config: {
+        theme: {
+          extend: {
+            screens: {
+              '3xl': '1920px',  // Full HD
+              '4xl': '2560px',  // 1440p/4K
+              'tv': '3840px',   // 4K TV
+            },
+          },
+        },
+      },
+    }),
     tanstackStart(),
     viteReact(),
   ],

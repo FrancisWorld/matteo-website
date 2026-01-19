@@ -5,13 +5,16 @@ import {
 	useRouterState,
 } from "@tanstack/react-router";
 import { motion, useScroll, useTransform } from "motion/react";
+import { useState } from "react";
+import { DiscordIcon } from "@/components/ui/discord";
+import { HamburgerIcon } from "@/components/ui/hamburger";
+import { InstagramIcon } from "@/components/ui/instagram";
+import { SearchIcon } from "@/components/ui/search";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { TwitterIcon } from "@/components/ui/twitter";
+import { YoutubeIcon } from "@/components/ui/youtube";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 import { signOut } from "@/lib/auth-client";
-import { DiscordIcon } from "../ui/discord";
-import { InstagramIcon } from "../ui/instagram";
-import { SearchIcon } from "../ui/search";
-import { TwitterIcon } from "../ui/twitter";
-import { YoutubeIcon } from "../ui/youtube";
 import { PixelButton } from "./PixelButton";
 
 export function PixelLayout({ children }: { children: React.ReactNode }) {
@@ -21,6 +24,7 @@ export function PixelLayout({ children }: { children: React.ReactNode }) {
 	const navigate = useNavigate();
 	const routerState = useRouterState();
 	const isHomePage = routerState.location.pathname === "/";
+	const [menuOpen, setMenuOpen] = useState(false);
 
 	const avatarUrl = user?.image
 		? user.image
@@ -65,11 +69,11 @@ export function PixelLayout({ children }: { children: React.ReactNode }) {
 					boxShadow: headerShadow,
 				}}
 			>
-				<div className="container mx-auto px-4 h-20 flex items-center justify-between">
-					<div className="flex items-center gap-8">
+				<div className="container mx-auto px-4 h-16 md:h-20 flex items-center justify-between">
+					<div className="flex items-center gap-4 md:gap-8">
 						<Link to="/" className="group">
 							<motion.span
-								className="text-2xl font-pixel text-white tracking-widest pixel-text-shadow block"
+								className="text-lg md:text-2xl font-pixel text-white tracking-widest pixel-text-shadow block"
 								whileHover={{ scale: 1.05 }}
 								transition={{ type: "spring", stiffness: 400 }}
 							>
@@ -88,7 +92,7 @@ export function PixelLayout({ children }: { children: React.ReactNode }) {
 						</nav>
 					</div>
 
-					<div className="flex items-center gap-4">
+					<div className="flex items-center gap-2 md:gap-4">
 						<motion.button
 							type="button"
 							className="p-2 text-white/80 hover:text-white hover:bg-white/10"
@@ -96,10 +100,10 @@ export function PixelLayout({ children }: { children: React.ReactNode }) {
 							whileHover={{ scale: 1.1 }}
 							whileTap={{ scale: 0.95 }}
 						>
-							<SearchIcon size={20} />
+							<SearchIcon size={20} className="w-5 h-5 md:w-6 md:h-6" />
 						</motion.button>
 						{session.data ? (
-							<div className="flex items-center gap-4">
+							<div className="flex items-center gap-2 md:gap-4">
 								<div className="flex items-center gap-2">
 									<Link to="/settings">
 										{avatarUrl ? (
@@ -124,6 +128,7 @@ export function PixelLayout({ children }: { children: React.ReactNode }) {
 								<PixelButton
 									variant="destructive"
 									size="sm"
+									className="hidden sm:flex"
 									onClick={() => {
 										signOut({
 											fetchOptions: {
@@ -150,6 +155,83 @@ export function PixelLayout({ children }: { children: React.ReactNode }) {
 								</PixelButton>
 							</Link>
 						)}
+
+						{/* Mobile Menu */}
+						<div className="md:hidden">
+							<Sheet open={menuOpen} onOpenChange={setMenuOpen}>
+								<SheetTrigger asChild>
+									<HamburgerIcon isOpen={menuOpen} />
+								</SheetTrigger>
+								<SheetContent
+									side="right"
+									className="w-64 bg-[#1e1e1e] border-l-4 border-[#000000]"
+								>
+									<nav className="flex flex-col gap-4 pt-8">
+										<MobileNavLink
+											to="/videos"
+											onClick={() => setMenuOpen(false)}
+										>
+											VÍDEOS
+										</MobileNavLink>
+										<MobileNavLink
+											to="/blog"
+											onClick={() => setMenuOpen(false)}
+										>
+											BLOG
+										</MobileNavLink>
+										<MobileNavLink
+											to="/shop"
+											onClick={() => setMenuOpen(false)}
+										>
+											LOJA
+										</MobileNavLink>
+										<MobileNavLink
+											to="/community"
+											onClick={() => setMenuOpen(false)}
+										>
+											COMUNIDADE
+										</MobileNavLink>
+										{session.data && (
+											<>
+												<div className="h-px bg-white/10 my-2" />
+												<MobileNavLink
+													to="/settings"
+													onClick={() => setMenuOpen(false)}
+												>
+													CONFIGURAÇÕES
+												</MobileNavLink>
+												<button
+													type="button"
+													onClick={() => {
+														signOut({
+															fetchOptions: {
+																onSuccess: () => {
+																	router.invalidate().then(() => {
+																		navigate({ to: "/" });
+																	});
+																	setMenuOpen(false);
+																},
+															},
+														});
+													}}
+													className="font-pixel text-lg md:text-xl px-4 py-3 text-red-400 hover:text-red-300 hover:bg-muted transition-colors block rounded text-left w-full"
+												>
+													SAIR
+												</button>
+											</>
+										)}
+										{!session.data && (
+											<MobileNavLink
+												to="/auth/login"
+												onClick={() => setMenuOpen(false)}
+											>
+												ENTRAR
+											</MobileNavLink>
+										)}
+									</nav>
+								</SheetContent>
+							</Sheet>
+						</div>
 					</div>
 				</div>
 			</motion.header>
@@ -158,7 +240,7 @@ export function PixelLayout({ children }: { children: React.ReactNode }) {
 				{children}
 			</main>
 
-			<footer className="relative z-10 bg-[#0a0a0a] border-t-4 border-[#222] pt-16 pb-8 text-white">
+			<footer className="relative z-10 bg-[#0a0a0a] border-t-4 border-[#222] pt-12 md:pt-16 pb-8 text-white">
 				<div className="container mx-auto px-4">
 					<div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
 						<FooterColumn
@@ -207,13 +289,13 @@ export function PixelLayout({ children }: { children: React.ReactNode }) {
 					<div className="border-t-2 border-[#222] pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-600 gap-4">
 						<div className="flex gap-6 font-body">
 							<Link
-								to="/"
+								to="/privacy"
 								className="hover:text-primary transition-colors text-sm"
 							>
 								Política de Privacidade
 							</Link>
 							<Link
-								to="/"
+								to="/terms"
 								className="hover:text-primary transition-colors text-sm"
 							>
 								Termos de Serviço
@@ -253,6 +335,26 @@ function NavLink({ to, children }: { to: string; children: React.ReactNode }) {
 					}}
 				/>
 			)}
+		</Link>
+	);
+}
+
+function MobileNavLink({
+	to,
+	children,
+	onClick,
+}: {
+	to: string;
+	children: React.ReactNode;
+	onClick?: () => void;
+}) {
+	return (
+		<Link
+			to={to}
+			onClick={onClick}
+			className="font-pixel text-lg md:text-xl px-4 py-3 text-gray-300 hover:text-white hover:bg-muted transition-colors block rounded"
+		>
+			{children}
 		</Link>
 	);
 }

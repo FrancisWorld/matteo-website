@@ -1,4 +1,4 @@
-import { internalMutation, query } from "./_generated/server";
+import { internalMutation, internalQuery, query } from "./_generated/server";
 import { v } from "convex/values";
 
 export const upsertBatch = internalMutation({
@@ -16,6 +16,7 @@ export const upsertBatch = internalMutation({
 				duration: v.optional(v.string()),
 				publishedAt: v.number(),
 				fetchedAt: v.number(),
+                statsUpdatedAt: v.optional(v.number()),
 				tags: v.optional(v.array(v.string())),
 			}),
 		),
@@ -153,4 +154,81 @@ export const count = query({
 		const videos = await ctx.db.query("videos").collect();
 		return videos.length;
 	},
+});
+
+// Helper Functions for Optimized Sync
+
+// Get recent video IDs for comparison
+export const getRecentVideoIds = internalQuery({
+  args: { limit: v.optional(v.number()) },
+  handler: async (ctx, args) => {
+    const limit = args.limit ?? 10;
+    const videos = await ctx.db
+      .query("videos")
+      .withIndex("by_published")
+      .order("desc")
+      .take(limit);
+    return videos.map(v => v.youtubeId);
+  },
+});
+
+// Get videos needing stats update (recent, but stats are old)
+export const getVideosNeedingStatsUpdate = internalQuery({
+  args: {
+    publishedAfter: v.number(),
+    statsUpdatedBefore: v.number(),
+  },
+  handler: async (ctx, args) => {
+    // Ideally we would use a compound index on publishedAt, but we can filter in memory for simplicity
+    // given the dataset size isn't huge yet.
+    // Optimization: fetch recent videos first as they are most likely candidates.
+    const videos = await ctx.db
+      .query("videos")
+      .withIndex("by_published")
+      .order("desc")
+      // Limit to reasonable recent history to avoid scanning everything if not needed
+      // but `collect()` without limit scans all... for now let's just use `collect` 
+      // but filtered by the index range if possible.
+      // Since we can't easily range filter on two fields without specific index, 
+      // we'll filter in JS.
+      .filter(q => q.gte(q.field("publishedAt"), args.publishedAfter))
+      .collect();
+
+    return videos.filter(
+      v => 
+        !v.statsUpdatedAt || v.statsUpdatedAt < args.statsUpdatedBefore
+    );
+  },
+});
+
+// Update only stats for a batch of videos
+export const updateStatsBatch = internalMutation({
+  args: {
+    updates: v.array(
+      v.object({
+        youtubeId: v.string(),
+        viewCount: v.number(),
+        likeCount: v.number(),
+        commentCount: v.number(),
+        statsUpdatedAt: v.number(),
+      }),
+    ),
+  },
+  handler: async (ctx, args) => {
+    for (const update of args.updates) {
+      const existing = await ctx.db
+        .query("videos")
+        .withIndex("by_youtube_id", (q) => q.eq("youtubeId", update.youtubeId))
+        .first();
+
+      if (existing) {
+        await ctx.db.patch(existing._id, {
+          viewCount: update.viewCount,
+          likeCount: update.likeCount,
+          commentCount: update.commentCount,
+          statsUpdatedAt: update.statsUpdatedAt,
+        });
+      }
+    }
+  },
 });

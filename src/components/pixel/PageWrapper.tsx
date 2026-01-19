@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import type { ReactNode } from "react";
+import { cn } from "@/lib/utils";
 
 interface PageWrapperProps {
 	children: ReactNode;
@@ -46,7 +47,14 @@ export function PageWrapper({
 			initial="initial"
 			animate="animate"
 			exit="exit"
-			className={`min-h-[calc(100vh-5rem)] ${withContainer ? "container mx-auto" : ""} ${withPadding ? "px-4 py-8 md:py-12" : ""} ${className}`}
+			className={cn(
+				"min-h-[calc(100vh-5rem)]",
+				withContainer &&
+					"container mx-auto w-full max-w-screen-xl 3xl:max-w-[1920px] 4xl:max-w-[2560px] 4xl:mx-auto",
+				withPadding &&
+					"px-4 md:px-6 lg:px-8 3xl:px-12 4xl:px-16 py-8 md:py-12 3xl:py-16 4xl:py-24 spacing-section",
+				className,
+			)}
 		>
 			{children}
 		</motion.div>

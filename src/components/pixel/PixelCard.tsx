@@ -13,7 +13,7 @@ export function PixelCard({
 }: PixelCardProps) {
 	return (
 		<motion.div
-			whileHover={hoverEffect ? { y: -4 } : undefined}
+			whileHover={hoverEffect ? { y: -2 } : undefined}
 			transition={{ type: "tween", duration: 0.15, ease: "linear" }}
 			style={
 				{
@@ -22,16 +22,19 @@ export function PixelCard({
 				} as React.CSSProperties
 			}
 			className={cn(
-				"relative bg-card text-card-foreground border-2 border-foreground p-6 pixel-shadow-3d",
+				"bg-card text-card-foreground border-2 border-foreground relative",
+				// Removed default shadow from here to control it per instance or add it back selectively
+				// Added a default shadow that is cleaner
+				"p-4 shadow-[2px_2px_0px_0px_var(--foreground)] md:shadow-[3px_3px_0px_0px_var(--foreground)]",
 				className,
 			)}
 			{...props}
 		>
-			{/* Corner Accents */}
-			<div className="absolute top-1 left-1 w-2 h-2 bg-primary pointer-events-none" />
-			<div className="absolute top-1 right-1 w-2 h-2 bg-primary pointer-events-none" />
-			<div className="absolute bottom-1 left-1 w-2 h-2 bg-primary pointer-events-none" />
-			<div className="absolute bottom-1 right-1 w-2 h-2 bg-primary pointer-events-none" />
+			{/* Unified corner accents - smaller and proportional */}
+			<div className="absolute top-1.5 left-1.5 w-1.5 h-1.5 bg-primary pointer-events-none z-0" />
+			<div className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-primary pointer-events-none z-0" />
+			<div className="absolute bottom-1.5 left-1.5 w-1.5 h-1.5 bg-primary pointer-events-none z-0" />
+			<div className="absolute bottom-1.5 right-1.5 w-1.5 h-1.5 bg-primary pointer-events-none z-0" />
 
 			{children as React.ReactNode}
 		</motion.div>

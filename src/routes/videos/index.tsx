@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "convex/react";
+import { Eye, Search } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
-import { PageTitle } from "@/components/pixel/AnimatedText";
 import { ContentCard } from "@/components/pixel/ContentCard";
-import { fadeInUp, PageWrapper } from "@/components/pixel/PageWrapper";
+import { PageWrapper } from "@/components/pixel/PageWrapper";
+import { PixelButton } from "@/components/pixel/PixelButton";
 import {
 	Carousel,
 	CarouselContent,
@@ -12,16 +13,15 @@ import {
 	CarouselNext,
 	CarouselPrevious,
 } from "@/components/ui/carousel";
-import { SearchIcon } from "@/components/ui/search";
 import { api } from "../../../convex/_generated/api";
 
 export const Route = createFileRoute("/videos/")({
 	head: () => ({
 		meta: [
-			{ title: "Videos | Matteo" },
+			{ title: "Vídeos | Matteo" },
 			{
 				name: "description",
-				content: "Watch the latest Minecraft adventures from Matteo",
+				content: "Assista às últimas aventuras de Minecraft do Matteo",
 			},
 		],
 	}),
@@ -30,6 +30,7 @@ export const Route = createFileRoute("/videos/")({
 
 function VideosIndex() {
 	const [search, setSearch] = useState("");
+	const [limit, setLimit] = useState(20);
 
 	const shorts = useQuery(api.videos.list, {
 		limit: 20,
@@ -38,7 +39,7 @@ function VideosIndex() {
 	});
 
 	const videos = useQuery(api.videos.list, {
-		limit: 20,
+		limit: limit,
 		search: search || undefined,
 		type: "video",
 	});
@@ -54,150 +55,166 @@ function VideosIndex() {
 		return Date.now() - timestamp < threeDays;
 	};
 
+	const isMostViewed = (video: any) => {
+		return video.viewCount > 10000;
+	};
+
+	const handleLoadMore = () => {
+		setLimit((prev) => prev + 20);
+	};
+
 	return (
 		<PageWrapper>
-			<div className="space-y-12">
-				<div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-					<PageTitle subtitle="Assista às últimas aventuras do Matteo">
+			<div className="space-y-8 md:space-y-12 3xl:space-y-16">
+				<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 md:gap-4 px-1 md:px-0">
+					<h1 className="text-2xl sm:text-3xl md:text-4xl 3xl:text-5xl 4xl:text-6xl font-pixel text-white">
 						VÍDEOS
-					</PageTitle>
-
-					<motion.div
-						className="relative w-full md:w-96"
-						initial={{ opacity: 0, x: 20 }}
-						animate={{ opacity: 1, x: 0 }}
-						transition={{ delay: 0.2, duration: 0.4 }}
-					>
+					</h1>
+					<div className="relative w-full sm:w-auto sm:max-w-sm md:max-w-md 3xl:max-w-lg 4xl:max-w-2xl">
 						<input
 							type="text"
 							placeholder="PESQUISAR VÍDEOS..."
-							className="w-full h-12 pl-12 pr-4 bg-[#1a1a1a] border-2 border-[#333] font-pixel text-xs focus:outline-none focus:border-primary transition-colors"
+							className="w-full h-10 md:h-12 3xl:h-14 4xl:h-16 pl-10 md:pl-12 4xl:pl-14 pr-3 md:pr-4 4xl:pr-6 bg-input border-2 md:border-3 4xl:border-4 border-foreground font-pixel text-xs md:text-sm 3xl:text-base 4xl:text-lg focus:outline-none focus:ring-2 focus:ring-primary"
 							value={search}
-							onChange={(e) => setSearch(e.target.value)}
+							onChange={(e) => {
+								setSearch(e.target.value);
+								setLimit(20); // Reset limit on search
+							}}
 						/>
-						<div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none">
-							<SearchIcon size={18} />
-						</div>
-					</motion.div>
+						<Search
+							className="absolute left-3 md:left-4 4xl:left-5 top-1/2 -translate-y-1/2 text-muted-foreground size-4 md:size-5 4xl:size-6"
+							size={20}
+						/>
+					</div>
 				</div>
 
-				<section className="space-y-6">
-					<motion.h2
-						variants={fadeInUp}
-						initial="initial"
-						animate="animate"
-						className="text-2xl font-pixel text-white pixel-text-shadow border-l-4 border-primary pl-4"
-					>
-						VÍDEOS COMPLETOS
-					</motion.h2>
-
-					<Carousel
-						opts={{
-							align: "start",
-							loop: true,
-						}}
-						className="w-full"
-					>
-						<CarouselContent className="-ml-4 py-8">
-							{videos === undefined
-								? Array.from({ length: 4 }).map((_, i) => (
-										<CarouselItem
-											key={`sk-v-${i}`}
-											className="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
-										>
-											<div className="aspect-video bg-[#1a1a1a] animate-pulse border-2 border-[#222]" />
-										</CarouselItem>
-									))
-								: videos.map((video: any) => (
-										<CarouselItem
-											key={video._id}
-											className="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
-										>
-											<ContentCard
-												title={video.title}
-												type="video"
-												thumbnail={video.thumbnailHigh || video.thumbnail}
-												href={`/videos/${video._id}`}
-												isRecent={isRecent(video.publishedAt)}
-												metadata={[
-													{
-														label: "VIEWS",
-														value: formatViews(video.viewCount),
-													},
-													{
-														label: "",
-														value: new Date(
-															video.publishedAt,
-														).toLocaleDateString("pt-BR"),
-													},
-												]}
-											/>
-										</CarouselItem>
-									))}
-						</CarouselContent>
-						<div className="hidden md:block">
-							<CarouselPrevious className="left-4 bg-black/80 hover:bg-primary text-white hover:text-black border-2 border-white rounded-none h-12 w-12 transition-all pixel-shadow-3d" />
-							<CarouselNext className="right-4 bg-black/80 hover:bg-primary text-white hover:text-black border-2 border-white rounded-none h-12 w-12 transition-all pixel-shadow-3d" />
+				{/* VIDEOS SECTION */}
+				<section className="space-y-4 md:space-y-6">
+					<h2 className="text-xl md:text-2xl 3xl:text-3xl font-pixel text-white pixel-text-shadow px-1 md:px-0">
+						TODOS OS VÍDEOS
+					</h2>
+					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6 gap-4 md:gap-6">
+						{videos === undefined ? (
+							Array.from({ length: 6 }).map((_, i) => (
+								<div
+									key={`skeleton-${i}`}
+									className="aspect-video bg-muted animate-pulse border-2 md:border-3 4xl:border-4 border-muted"
+								/>
+							))
+						) : videos.length === 0 ? (
+							<div className="col-span-full text-center py-12 md:py-16 3xl:py-20 4xl:py-32">
+								<p className="text-xl md:text-2xl 3xl:text-3xl 4xl:text-4xl font-pixel text-muted-foreground">
+									NENHUM VÍDEO ENCONTRADO
+								</p>
+							</div>
+						) : (
+							videos.map((video: any, i: number) => (
+								<motion.div
+									key={video._id}
+									initial={{ opacity: 0, y: 20 }}
+									animate={{ opacity: 1, y: 0 }}
+									transition={{ delay: i * 0.05 }}
+									className="h-full"
+								>
+									<ContentCard
+										title={video.title}
+										type="video"
+										thumbnail={video.thumbnailHigh || video.thumbnail}
+										href={`/videos/${video._id}`}
+										isMostViewed={isMostViewed(video)}
+										isRecent={isRecent(video.publishedAt)}
+										metadata={[
+											{
+												label: "",
+												icon: <Eye className="w-3 h-3 md:w-3.5 md:h-3.5" />,
+												value: formatViews(video.viewCount),
+											},
+											{
+												label: "",
+												value: new Date(video.publishedAt).toLocaleDateString(
+													"pt-BR",
+												),
+											},
+										]}
+									/>
+								</motion.div>
+							))
+						)}
+					</div>
+					{/* Load More Button */}
+					{videos && videos.length >= limit && (
+						<div className="flex justify-center mt-8 md:mt-12">
+							<PixelButton
+								onClick={handleLoadMore}
+								variant="secondary"
+								className="px-8 py-3 text-sm md:text-base"
+							>
+								CARREGAR MAIS
+							</PixelButton>
 						</div>
-					</Carousel>
+					)}
 				</section>
 
-				<section className="space-y-6">
-					<motion.h2
-						variants={fadeInUp}
-						initial="initial"
-						animate="animate"
-						transition={{ delay: 0.2 }}
-						className="text-2xl font-pixel text-red-500 pixel-text-shadow flex items-center gap-2"
-					>
-						SHORTS <span className="text-white text-sm">⚡</span>
-					</motion.h2>
+				{/* SHORTS CAROUSEL SECTION */}
+				{shorts && shorts.length > 0 && !search && (
+					<section className="space-y-4 md:space-y-6 pt-8 md:pt-12 border-t-4 border-muted/30">
+						<h2 className="text-xl md:text-2xl 3xl:text-3xl font-pixel text-red-500 pixel-text-shadow flex items-center gap-2 px-1 md:px-0">
+							SHORTS <span className="text-white text-sm">⚡</span>
+						</h2>
 
-					<Carousel
-						opts={{
-							align: "start",
-							loop: true,
-						}}
-						className="w-full"
-					>
-						<CarouselContent className="-ml-4 py-8">
-							{shorts === undefined
-								? Array.from({ length: 6 }).map((_, i) => (
-										<CarouselItem
-											key={`sk-s-${i}`}
-											className="pl-4 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
-										>
-											<div className="aspect-[9/16] bg-[#1a1a1a] animate-pulse border-2 border-[#222]" />
-										</CarouselItem>
-									))
-								: shorts.map((video: any) => (
-										<CarouselItem
-											key={video._id}
-											className="pl-4 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
-										>
-											<ContentCard
-												title={video.title}
-												type="video"
-												thumbnail={video.thumbnailHigh || video.thumbnail}
-												href={`/videos/${video._id}`}
-												isRecent={isRecent(video.publishedAt)}
-												isShort
-												metadata={[
-													{
-														label: "VIEWS",
-														value: formatViews(video.viewCount),
-													},
-												]}
-											/>
-										</CarouselItem>
-									))}
-						</CarouselContent>
-						<div className="hidden md:block">
-							<CarouselPrevious className="left-4 bg-black/80 hover:bg-red-500 text-white hover:text-black border-2 border-white rounded-none h-10 w-10 transition-all pixel-shadow-3d" />
-							<CarouselNext className="right-4 bg-black/80 hover:bg-red-500 text-white hover:text-black border-2 border-white rounded-none h-10 w-10 transition-all pixel-shadow-3d" />
+						<div className="relative">
+							{/* Gradient Masks */}
+							<div className="absolute left-0 top-0 bottom-0 w-8 md:w-16 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+							<div className="absolute right-0 top-0 bottom-0 w-8 md:w-16 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+
+							<div className="px-8 md:px-12">
+								<Carousel
+									opts={{
+										align: "start",
+										loop: false,
+									}}
+									className="w-full"
+								>
+									<CarouselContent className="-ml-2 md:-ml-4">
+										{shorts.map((video: any, i: number) => (
+											<CarouselItem
+												key={video._id}
+												className="pl-2 md:pl-4 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6"
+											>
+												<motion.div
+													initial={{ opacity: 0, scale: 0.9 }}
+													animate={{ opacity: 1, scale: 1 }}
+													transition={{ delay: i * 0.05 }}
+													className="h-full"
+												>
+													<ContentCard
+														title={video.title}
+														type="video"
+														thumbnail={video.thumbnailHigh || video.thumbnail}
+														href={`/videos/${video._id}`}
+														isShort
+														isRecent={isRecent(video.publishedAt)}
+														metadata={[
+															{
+																label: "",
+																icon: (
+																	<Eye className="w-3 h-3 md:w-3.5 md:h-3.5" />
+																),
+																value: formatViews(video.viewCount),
+															},
+														]}
+													/>
+												</motion.div>
+											</CarouselItem>
+										))}
+									</CarouselContent>
+									<CarouselPrevious className="left-0 md:-left-12 h-10 w-10 border-2 border-foreground bg-background hover:bg-primary hover:text-white transition-colors rounded-none pixel-shadow-3d z-20" />
+									<CarouselNext className="right-0 md:-right-12 h-10 w-10 border-2 border-foreground bg-background hover:bg-primary hover:text-white transition-colors rounded-none pixel-shadow-3d z-20" />
+								</Carousel>
+							</div>
 						</div>
-					</Carousel>
-				</section>
+					</section>
+				)}
 			</div>
 		</PageWrapper>
 	);

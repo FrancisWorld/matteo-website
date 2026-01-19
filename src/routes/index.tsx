@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "convex/react";
-import { BookOpen, ChevronRight, Trophy, Youtube } from "lucide-react";
+import { BookOpen, Eye, Trophy, Youtube } from "lucide-react";
 import { motion } from "motion/react";
 import { AnimatedText } from "@/components/pixel/AnimatedText";
 import { ContentCard } from "@/components/pixel/ContentCard";
@@ -25,6 +25,19 @@ function Home() {
 
 	const heroVideo = mostViewedVideos?.[0];
 
+	const isMostViewed = (video: any) => {
+		// Simple check if video is in the top 3 most viewed list we fetched
+		return (
+			mostViewedVideos?.some((v) => v._id === video._id) ||
+			video.viewCount > 10000
+		);
+	};
+
+	const isRecent = (timestamp: number) => {
+		const threeDays = 3 * 24 * 60 * 60 * 1000;
+		return Date.now() - timestamp < threeDays;
+	};
+
 	return (
 		<PageWrapper
 			withContainer={false}
@@ -32,7 +45,7 @@ function Home() {
 			className="space-y-0"
 		>
 			{/* HERO SECTION */}
-			<section className="relative bg-[#0a0a0a] border-b-4 border-black overflow-hidden min-h-[90vh] flex items-center pt-20">
+			<section className="relative bg-[#0a0a0a] border-b-4 border-black overflow-hidden min-h-[70vh] md:min-h-[80vh] flex items-center pt-20">
 				{/* Background Image - Full Color */}
 				<div className="absolute inset-0 bg-[url('https://www.minecraft.net/content/dam/games/minecraft/key-art/Minecraft-1-19-Wild-Update-Key-Art.jpg')] bg-cover bg-center" />
 
@@ -52,17 +65,17 @@ function Home() {
 					}}
 				/>
 
-				<div className="container mx-auto px-4 relative z-10 grid lg:grid-cols-2 gap-12 items-center">
+				<div className="container mx-auto px-4 md:px-6 lg:px-8 relative z-10 grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
 					<motion.div
 						variants={staggerContainer}
 						initial="initial"
 						animate="animate"
-						className="space-y-8"
+						className="space-y-6 md:space-y-8"
 					>
 						<div className="space-y-4">
 							<motion.h1
 								variants={fadeInUp}
-								className="text-4xl md:text-6xl lg:text-7xl font-pixel leading-tight text-white pixel-text-shadow-lg"
+								className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-pixel leading-tight text-white pixel-text-shadow-lg"
 							>
 								BEM-VINDO AO <br />
 								<span className="text-primary drop-shadow-[0_0_15px_rgba(85,170,85,0.6)]">
@@ -77,7 +90,7 @@ function Home() {
 
 						<motion.p
 							variants={fadeInUp}
-							className="text-xl md:text-2xl text-gray-200 font-body max-w-lg shadow-black drop-shadow-md bg-black/40 p-6 border-l-4 border-primary backdrop-blur-sm"
+							className="text-base sm:text-lg md:text-2xl text-gray-200 font-body max-w-lg shadow-black drop-shadow-md bg-black/40 p-4 md:p-6 border-l-4 border-primary backdrop-blur-sm"
 						>
 							O ponto de spawn definitivo da comunidade. Mergulhe em aventuras
 							épicas, descubra segredos do servidor e conquiste seu lugar na
@@ -86,7 +99,10 @@ function Home() {
 
 						<motion.div variants={fadeInUp} className="flex flex-wrap gap-4">
 							<Link to="/videos">
-								<PixelButton size="lg" className="text-lg h-14 px-8">
+								<PixelButton
+									size="lg"
+									className="text-base md:text-lg h-12 md:h-14 px-6 md:px-8"
+								>
 									COMEÇAR A JORNADA
 								</PixelButton>
 							</Link>
@@ -94,7 +110,7 @@ function Home() {
 								<PixelButton
 									size="lg"
 									variant="secondary"
-									className="text-lg h-14 px-8"
+									className="text-base md:text-lg h-12 md:h-14 px-6 md:px-8"
 								>
 									JOGAR QUIZ
 								</PixelButton>
@@ -124,14 +140,14 @@ function Home() {
 			</section>
 
 			{/* LATEST VIDEOS */}
-			<section className="py-20 bg-[#121212]">
-				<div className="container mx-auto px-4 space-y-12">
-					<div className="flex justify-between items-end">
+			<section className="py-12 md:py-20 bg-[#121212]">
+				<div className="container mx-auto px-4 md:px-6 lg:px-8 space-y-8 md:space-y-12">
+					<div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
 						<div>
-							<h2 className="text-3xl md:text-4xl font-pixel text-white mb-4 flex items-center gap-3 pixel-text-shadow">
+							<h2 className="text-2xl md:text-4xl font-pixel text-white mb-4 flex items-center gap-3 pixel-text-shadow">
 								<Youtube
 									size={32}
-									className="text-red-600 drop-shadow-[2px_2px_0_rgba(0,0,0,0.5)]"
+									className="text-red-600 drop-shadow-[2px_2px_0_rgba(0,0,0,0.5)] md:w-8 md:h-8 w-6 h-6"
 								/>
 								ÚLTIMOS VÍDEOS
 							</h2>
@@ -152,7 +168,7 @@ function Home() {
 						initial="initial"
 						whileInView="animate"
 						viewport={{ once: true, margin: "-100px" }}
-						className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
+						className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6"
 					>
 						{recentVideos
 							? recentVideos.map((video: any) => (
@@ -162,9 +178,12 @@ function Home() {
 											type="video"
 											href={`/videos/${video._id}`}
 											thumbnail={video.thumbnailHigh || video.thumbnail}
+											isMostViewed={isMostViewed(video)}
+											isRecent={isRecent(video.publishedAt)}
 											metadata={[
 												{
-													label: "VIEWS",
+													label: "",
+													icon: <Eye className="w-3 h-3 md:w-3.5 md:h-3.5" />,
 													value: video.viewCount.toLocaleString(),
 												},
 											]}
@@ -182,16 +201,16 @@ function Home() {
 			</section>
 
 			{/* BLOGS & QUIZZES GRID */}
-			<section className="py-20 bg-[#1a1a1a] border-y-4 border-black">
-				<div className="container mx-auto px-4 grid lg:grid-cols-2 gap-16">
+			<section className="py-12 md:py-20 bg-[#1a1a1a] border-y-4 border-black">
+				<div className="container mx-auto px-4 md:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 md:gap-16">
 					{/* BLOGS */}
 					<div className="space-y-8">
-						<div className="flex justify-between items-end">
+						<div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
 							<div>
-								<h2 className="text-3xl font-pixel text-white mb-4 flex items-center gap-3 pixel-text-shadow">
+								<h2 className="text-2xl md:text-3xl font-pixel text-white mb-4 flex items-center gap-3 pixel-text-shadow">
 									<BookOpen
 										size={32}
-										className="text-[#795548] drop-shadow-[2px_2px_0_rgba(0,0,0,0.5)]"
+										className="text-[#795548] drop-shadow-[2px_2px_0_rgba(0,0,0,0.5)] md:w-8 md:h-8 w-6 h-6"
 									/>
 									ÚLTIMAS HISTÓRIAS
 								</h2>
@@ -218,7 +237,7 @@ function Home() {
 												href={`/blog/${post.slug}`}
 												thumbnail={post.coverImage}
 												subtitle={post.excerpt}
-												className="flex-row h-32"
+												orientation="horizontal"
 											/>
 										</motion.div>
 									))
@@ -228,12 +247,12 @@ function Home() {
 
 					{/* QUIZZES */}
 					<div className="space-y-8">
-						<div className="flex justify-between items-end">
+						<div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
 							<div>
-								<h2 className="text-3xl font-pixel text-white mb-4 flex items-center gap-3 pixel-text-shadow">
+								<h2 className="text-2xl md:text-3xl font-pixel text-white mb-4 flex items-center gap-3 pixel-text-shadow">
 									<Trophy
 										size={32}
-										className="text-[#FF5555] drop-shadow-[2px_2px_0_rgba(0,0,0,0.5)]"
+										className="text-[#FF5555] drop-shadow-[2px_2px_0_rgba(0,0,0,0.5)] md:w-8 md:h-8 w-6 h-6"
 									/>
 									DESAFIOS
 								</h2>
@@ -261,12 +280,12 @@ function Home() {
 												thumbnail={quiz.coverImage}
 												metadata={[
 													{
-														label: "Q",
+														label: "PERGUNTAS",
 														value: quiz.questions.length.toString(),
 													},
 													{
-														label: "DIFF",
-														value: quiz.difficulty?.toUpperCase() || "MED",
+														label: "DIF.",
+														value: quiz.difficulty?.toUpperCase() || "MÉD",
 													},
 												]}
 											/>
@@ -279,14 +298,14 @@ function Home() {
 			</section>
 
 			{/* NEWSLETTER */}
-			<section className="py-20 bg-[#121212]">
-				<div className="container mx-auto px-4">
+			<section className="py-12 md:py-20 bg-[#121212]">
+				<div className="container mx-auto px-4 md:px-6 lg:px-8">
 					<motion.div
 						initial={{ opacity: 0, y: 50 }}
 						whileInView={{ opacity: 1, y: 0 }}
 						viewport={{ once: true }}
 						transition={{ duration: 0.6 }}
-						className="max-w-4xl mx-auto bg-[#1e1e1e] p-8 md:p-12 border-2 border-white relative overflow-hidden pixel-shadow-3d"
+						className="max-w-4xl mx-auto bg-[#1e1e1e] p-6 md:p-12 border-2 border-white relative overflow-hidden pixel-shadow-3d"
 						style={
 							{
 								"--shadow-right": "#000000",
@@ -297,10 +316,10 @@ function Home() {
 						<div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl" />
 						<div className="relative z-10 grid md:grid-cols-2 gap-8 items-center">
 							<div>
-								<h2 className="text-3xl font-pixel text-white mb-4 pixel-text-shadow">
+								<h2 className="text-2xl md:text-3xl font-pixel text-white mb-4 pixel-text-shadow">
 									ENTRE PARA O ESQUADRÃO
 								</h2>
-								<p className="text-gray-400 font-body text-xl">
+								<p className="text-base md:text-xl text-gray-400 font-body">
 									Receba as últimas atualizações, skins exclusivas e acesso
 									antecipado a novos conteúdos diretamente na sua caixa de
 									entrada.
@@ -310,7 +329,7 @@ function Home() {
 								<input
 									type="email"
 									placeholder="Digite seu email"
-									className="bg-[#2a2a2a] border-2 border-[#555] p-4 font-body text-lg text-white focus:border-primary focus:outline-none placeholder:text-gray-600 w-full shadow-[inset_2px_2px_4px_rgba(0,0,0,0.5)]"
+									className="bg-[#2a2a2a] border-2 border-[#555] p-4 font-body text-base md:text-lg text-white focus:border-primary focus:outline-none placeholder:text-gray-600 w-full shadow-[inset_2px_2px_4px_rgba(0,0,0,0.5)]"
 								/>
 								<PixelButton size="lg" className="w-full">
 									INSCREVER-SE
