@@ -5,14 +5,15 @@ import {
 	HeadContent,
 	Outlet,
 	Scripts,
-	useRouterState,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
-import { AnimatePresence, motion } from "motion/react";
+import { ReactLenis } from "lenis/react";
 import { PixelLayout } from "@/components/pixel/PixelLayout";
+import { ScrollToTop } from "@/components/ScrollToTop";
 import ConvexProvider from "../integrations/convex/provider";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles.css?url";
+import "lenis/dist/lenis.css";
 
 interface MyRouterContext {
 	queryClient: QueryClient;
@@ -45,23 +46,13 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 });
 
 function RootComponent() {
-	const router = useRouterState();
-
 	return (
-		<PixelLayout>
-			<AnimatePresence mode="wait">
-				<motion.div
-					key={router.location.pathname}
-					initial={{ opacity: 0, y: 10 }}
-					animate={{ opacity: 1, y: 0 }}
-					exit={{ opacity: 0, y: -10 }}
-					transition={{ duration: 0.2 }}
-					className="min-h-full"
-				>
-					<Outlet />
-				</motion.div>
-			</AnimatePresence>
-		</PixelLayout>
+		<ReactLenis root>
+			<ScrollToTop />
+			<PixelLayout>
+				<Outlet />
+			</PixelLayout>
+		</ReactLenis>
 	);
 }
 

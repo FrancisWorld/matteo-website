@@ -15,7 +15,7 @@ The **Matteo Community Platform** is **70% complete**. Phases 1-2 are production
 | **Phase 2: Authentication** | ✅ DONE | 100% | None—fully operational |
 | **Phase 3: Blog System** | 🔶 PARTIAL | 85% | Add pagination + per-user routes |
 | **Phase 4: Quiz System** | ✅ DONE | 100% | Everything implemented |
-| **Phase 5: Videos System** | ✅ DONE | 100% | Youtube sync, video listing, detail page |
+| **Phase 5: Videos System** | ✅ DONE | 100% | Sorting fixed, Badges refined |
 
 ---
 

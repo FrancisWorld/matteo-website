@@ -41,26 +41,66 @@ export const list = query({
 		limit: v.optional(v.number()),
 		offset: v.optional(v.number()),
 		search: v.optional(v.string()),
+		type: v.optional(v.union(v.literal("short"), v.literal("video"))),
 	},
 	handler: async (ctx, args) => {
 		const limit = args.limit ?? 20;
 		const offset = args.offset ?? 0;
 
-		let videoQuery = ctx.db.query("videos").order("desc");
+		let videoQuery = ctx.db
+			.query("videos")
+			.withIndex("by_published")
+			.order("desc");
 
+		const videos = await videoQuery.collect();
+
+		let filtered = videos;
+
+		// Filter by Search
 		if (args.search) {
-			const videos = await videoQuery.collect();
 			const searchLower = args.search.toLowerCase();
-			const filtered = videos.filter(
+			filtered = filtered.filter(
 				(v) =>
 					v.title.toLowerCase().includes(searchLower) ||
 					v.description?.toLowerCase().includes(searchLower),
 			);
-			return filtered.slice(offset, offset + limit);
 		}
 
-		const videos = await videoQuery.collect();
-		return videos.slice(offset, offset + limit);
+		// Filter by Type (Short vs Video)
+		if (args.type) {
+			filtered = filtered.filter((v) => {
+				const duration = v.duration;
+				if (!duration) return false;
+
+				// Parse ISO 8601 duration
+				// Shorts are typically <= 60 seconds, but we allow up to 90s to be safe
+				// Also check title/tags for #shorts
+
+				const isShort = (() => {
+					// Check metadata first
+					const titleLower = v.title.toLowerCase();
+					if (titleLower.includes("#shorts") || titleLower.includes("#short")) return true;
+					
+					// Check for 'H' (Hours) -> definitely long
+					if (duration.includes("H")) return false;
+
+					// Check minutes
+					const minuteMatch = duration.match(/(\d+)M/);
+					const minutes = minuteMatch ? parseInt(minuteMatch[1]) : 0;
+
+					// Check seconds
+					const secondMatch = duration.match(/(\d+)S/);
+					const seconds = secondMatch ? parseInt(secondMatch[1]) : 0;
+
+					const totalSeconds = minutes * 60 + seconds;
+					return totalSeconds <= 90;
+				})();
+
+				return args.type === "short" ? isShort : !isShort;
+			});
+		}
+
+		return filtered.slice(offset, offset + limit);
 	},
 });
 

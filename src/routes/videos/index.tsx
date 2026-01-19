@@ -1,10 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "convex/react";
-import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
+import { PageTitle } from "@/components/pixel/AnimatedText";
 import { ContentCard } from "@/components/pixel/ContentCard";
-import { PixelButton } from "@/components/pixel/PixelButton";
+import { fadeInUp, PageWrapper } from "@/components/pixel/PageWrapper";
+import {
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+	CarouselNext,
+	CarouselPrevious,
+} from "@/components/ui/carousel";
+import { SearchIcon } from "@/components/ui/search";
 import { api } from "../../../convex/_generated/api";
 
 export const Route = createFileRoute("/videos/")({
@@ -21,20 +29,19 @@ export const Route = createFileRoute("/videos/")({
 });
 
 function VideosIndex() {
-	const [page, setPage] = useState(1);
 	const [search, setSearch] = useState("");
-	const videosPerPage = 12;
-	const offset = (page - 1) * videosPerPage;
+
+	const shorts = useQuery(api.videos.list, {
+		limit: 20,
+		search: search || undefined,
+		type: "short",
+	});
 
 	const videos = useQuery(api.videos.list, {
-		limit: videosPerPage,
-		offset,
+		limit: 20,
 		search: search || undefined,
+		type: "video",
 	});
-	const totalCount = useQuery(api.videos.count, {});
-	const mostViewedVideos = useQuery(api.videos.getMostViewed, { limit: 3 });
-
-	const totalPages = totalCount ? Math.ceil(totalCount / videosPerPage) : 1;
 
 	const formatViews = (views: number) => {
 		if (views >= 1000000) return `${(views / 1000000).toFixed(1)}M`;
@@ -43,107 +50,155 @@ function VideosIndex() {
 	};
 
 	const isRecent = (timestamp: number) => {
-		const oneWeek = 7 * 24 * 60 * 60 * 1000;
-		return Date.now() - timestamp < oneWeek;
-	};
-
-	const isMostViewed = (id: string) => {
-		return mostViewedVideos?.some((v: any) => v._id === id) ?? false;
+		const threeDays = 3 * 24 * 60 * 60 * 1000;
+		return Date.now() - timestamp < threeDays;
 	};
 
 	return (
-		<div className="space-y-8">
-			<div className="flex flex-col md:flex-row justify-between items-center gap-4">
-				<h1 className="text-4xl font-pixel">VIDEOS</h1>
-				<div className="relative w-full md:w-96">
-					<input
-						type="text"
-						placeholder="SEARCH VIDEOS..."
-						className="w-full h-12 pl-12 pr-4 bg-input border-2 border-foreground font-pixel text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-						value={search}
-						onChange={(e) => {
-							setSearch(e.target.value);
-							setPage(1);
-						}}
-					/>
-					<Search
-						className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground"
-						size={20}
-					/>
-				</div>
-			</div>
+		<PageWrapper>
+			<div className="space-y-12">
+				<div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+					<PageTitle subtitle="Assista às últimas aventuras do Matteo">
+						VÍDEOS
+					</PageTitle>
 
-			<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-				{videos === undefined ? (
-					Array.from({ length: 6 }).map((_, i) => (
-						<div
-							key={`skeleton-${i}`}
-							className="aspect-video bg-muted animate-pulse border-2 border-muted"
+					<motion.div
+						className="relative w-full md:w-96"
+						initial={{ opacity: 0, x: 20 }}
+						animate={{ opacity: 1, x: 0 }}
+						transition={{ delay: 0.2, duration: 0.4 }}
+					>
+						<input
+							type="text"
+							placeholder="PESQUISAR VÍDEOS..."
+							className="w-full h-12 pl-12 pr-4 bg-[#1a1a1a] border-2 border-[#333] font-pixel text-xs focus:outline-none focus:border-primary transition-colors"
+							value={search}
+							onChange={(e) => setSearch(e.target.value)}
 						/>
-					))
-				) : videos.length === 0 ? (
-					<div className="col-span-full text-center py-20">
-						<p className="text-2xl font-pixel text-muted-foreground">
-							NO VIDEOS FOUND
-						</p>
-					</div>
-				) : (
-					videos.map((video: any, i: number) => (
-						<motion.div
-							key={video._id}
-							initial={{ opacity: 0, y: 20 }}
-							animate={{ opacity: 1, y: 0 }}
-							transition={{ delay: i * 0.05 }}
-							className="h-full"
-						>
-							<ContentCard
-								title={video.title}
-								type="video"
-								thumbnail={video.thumbnailHigh || video.thumbnail}
-								href={`/videos/${video._id}`}
-								isMostViewed={isMostViewed(video._id)}
-								isRecent={isRecent(video.publishedAt)}
-								metadata={[
-									{ label: "VIEWS", value: formatViews(video.viewCount) },
-									{
-										label: "AGO",
-										value: new Date(video.publishedAt).toLocaleDateString(),
-									},
-								]}
-							/>
-						</motion.div>
-					))
-				)}
-			</div>
-
-			{videos && videos.length > 0 && !search && (
-				<div className="flex justify-between items-center mt-12 pt-8 border-t-2 border-muted">
-					<PixelButton
-						onClick={() => setPage((p) => Math.max(1, p - 1))}
-						disabled={page === 1}
-						variant="secondary"
-					>
-						<ChevronLeft size={16} className="mr-1" /> PREVIOUS
-					</PixelButton>
-					<div className="flex items-center gap-2 font-pixel">
-						<span className="text-muted-foreground">Page</span>
-						<span className="bg-primary text-primary-foreground px-3 py-1">
-							{page}
-						</span>
-						<span className="text-muted-foreground">of</span>
-						<span className="bg-primary text-primary-foreground px-3 py-1">
-							{totalPages}
-						</span>
-					</div>
-					<PixelButton
-						onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-						disabled={page >= totalPages}
-						variant="secondary"
-					>
-						NEXT <ChevronRight size={16} className="ml-1" />
-					</PixelButton>
+						<div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none">
+							<SearchIcon size={18} />
+						</div>
+					</motion.div>
 				</div>
-			)}
-		</div>
+
+				<section className="space-y-6">
+					<motion.h2
+						variants={fadeInUp}
+						initial="initial"
+						animate="animate"
+						className="text-2xl font-pixel text-white pixel-text-shadow border-l-4 border-primary pl-4"
+					>
+						VÍDEOS COMPLETOS
+					</motion.h2>
+
+					<Carousel
+						opts={{
+							align: "start",
+							loop: true,
+						}}
+						className="w-full"
+					>
+						<CarouselContent className="-ml-4 py-8">
+							{videos === undefined
+								? Array.from({ length: 4 }).map((_, i) => (
+										<CarouselItem
+											key={`sk-v-${i}`}
+											className="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+										>
+											<div className="aspect-video bg-[#1a1a1a] animate-pulse border-2 border-[#222]" />
+										</CarouselItem>
+									))
+								: videos.map((video: any) => (
+										<CarouselItem
+											key={video._id}
+											className="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+										>
+											<ContentCard
+												title={video.title}
+												type="video"
+												thumbnail={video.thumbnailHigh || video.thumbnail}
+												href={`/videos/${video._id}`}
+												isRecent={isRecent(video.publishedAt)}
+												metadata={[
+													{
+														label: "VIEWS",
+														value: formatViews(video.viewCount),
+													},
+													{
+														label: "",
+														value: new Date(
+															video.publishedAt,
+														).toLocaleDateString("pt-BR"),
+													},
+												]}
+											/>
+										</CarouselItem>
+									))}
+						</CarouselContent>
+						<div className="hidden md:block">
+							<CarouselPrevious className="left-4 bg-black/80 hover:bg-primary text-white hover:text-black border-2 border-white rounded-none h-12 w-12 transition-all pixel-shadow-3d" />
+							<CarouselNext className="right-4 bg-black/80 hover:bg-primary text-white hover:text-black border-2 border-white rounded-none h-12 w-12 transition-all pixel-shadow-3d" />
+						</div>
+					</Carousel>
+				</section>
+
+				<section className="space-y-6">
+					<motion.h2
+						variants={fadeInUp}
+						initial="initial"
+						animate="animate"
+						transition={{ delay: 0.2 }}
+						className="text-2xl font-pixel text-red-500 pixel-text-shadow flex items-center gap-2"
+					>
+						SHORTS <span className="text-white text-sm">⚡</span>
+					</motion.h2>
+
+					<Carousel
+						opts={{
+							align: "start",
+							loop: true,
+						}}
+						className="w-full"
+					>
+						<CarouselContent className="-ml-4 py-8">
+							{shorts === undefined
+								? Array.from({ length: 6 }).map((_, i) => (
+										<CarouselItem
+											key={`sk-s-${i}`}
+											className="pl-4 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
+										>
+											<div className="aspect-[9/16] bg-[#1a1a1a] animate-pulse border-2 border-[#222]" />
+										</CarouselItem>
+									))
+								: shorts.map((video: any) => (
+										<CarouselItem
+											key={video._id}
+											className="pl-4 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
+										>
+											<ContentCard
+												title={video.title}
+												type="video"
+												thumbnail={video.thumbnailHigh || video.thumbnail}
+												href={`/videos/${video._id}`}
+												isRecent={isRecent(video.publishedAt)}
+												isShort
+												metadata={[
+													{
+														label: "VIEWS",
+														value: formatViews(video.viewCount),
+													},
+												]}
+											/>
+										</CarouselItem>
+									))}
+						</CarouselContent>
+						<div className="hidden md:block">
+							<CarouselPrevious className="left-4 bg-black/80 hover:bg-red-500 text-white hover:text-black border-2 border-white rounded-none h-10 w-10 transition-all pixel-shadow-3d" />
+							<CarouselNext className="right-4 bg-black/80 hover:bg-red-500 text-white hover:text-black border-2 border-white rounded-none h-10 w-10 transition-all pixel-shadow-3d" />
+						</div>
+					</Carousel>
+				</section>
+			</div>
+		</PageWrapper>
 	);
 }

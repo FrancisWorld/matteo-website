@@ -8,34 +8,15 @@ import {
 	ThumbsUp,
 } from "lucide-react";
 import { motion } from "motion/react";
+import { PageWrapper } from "@/components/pixel/PageWrapper";
 import { PixelButton } from "@/components/pixel/PixelButton";
 import { PixelCard } from "@/components/pixel/PixelCard";
 import { api } from "../../../convex/_generated/api";
 
 export const Route = createFileRoute("/videos/$id")({
-	head: ({ loaderData }: any) => {
-		if (!loaderData?.video) {
-			return { meta: [{ title: "Video Not Found | Matteo" }] };
-		}
-		return {
-			meta: [
-				{ title: `${loaderData.video.title} | Matteo` },
-				{
-					name: "description",
-					content: loaderData.video.description || "Watch this video on Matteo",
-				},
-				{ property: "og:title", content: loaderData.video.title },
-				{
-					property: "og:image",
-					content: loaderData.video.thumbnailHigh || loaderData.video.thumbnail,
-				},
-				{ property: "og:type", content: "video.other" },
-			],
-		};
-	},
-	loader: async ({ params }) => {
-		return { id: params.id };
-	},
+	head: () => ({
+		meta: [{ title: "Assistir | Matteo" }],
+	}),
 	component: VideoDetail,
 });
 
@@ -46,15 +27,15 @@ function VideoDetail() {
 
 	if (video === undefined) {
 		return (
-			<div className="flex items-center justify-center min-h-[50vh]">
+			<PageWrapper className="flex items-center justify-center">
 				<div className="font-pixel">LOADING VIDEO...</div>
-			</div>
+			</PageWrapper>
 		);
 	}
 
 	if (!video) {
 		return (
-			<div className="flex items-center justify-center min-h-[50vh]">
+			<PageWrapper className="flex items-center justify-center">
 				<PixelCard className="text-center p-12">
 					<h1 className="text-4xl font-pixel mb-4">VIDEO NOT FOUND</h1>
 					<p className="text-muted-foreground mb-6">
@@ -64,12 +45,12 @@ function VideoDetail() {
 						<PixelButton>BACK TO VIDEOS</PixelButton>
 					</Link>
 				</PixelCard>
-			</div>
+			</PageWrapper>
 		);
 	}
 
 	return (
-		<div className="space-y-8">
+		<PageWrapper className="space-y-8">
 			<Link to="/videos">
 				<PixelButton variant="outline" size="sm" className="gap-2">
 					<ChevronLeft className="w-4 h-4" />
@@ -162,6 +143,6 @@ function VideoDetail() {
 					</div>
 				</div>
 			</div>
-		</div>
+		</PageWrapper>
 	);
 }

@@ -11,6 +11,7 @@ export interface ContentCardProps {
 	href: string;
 	isMostViewed?: boolean;
 	isRecent?: boolean;
+	isShort?: boolean;
 	className?: string;
 }
 
@@ -23,6 +24,7 @@ export function ContentCard({
 	href,
 	isMostViewed,
 	isRecent,
+	isShort,
 	className,
 }: ContentCardProps) {
 	return (
@@ -31,13 +33,28 @@ export function ContentCard({
 				hoverEffect
 				className={cn(
 					"h-full p-0 overflow-hidden flex flex-col relative",
-					isMostViewed && "enchanted",
-					isRecent && "gold-glow",
+					isMostViewed && "enchanted ring-2 ring-purple-500",
+					isRecent && "gold-glow ring-2 ring-[#FFD700]",
 					className,
 				)}
 			>
+				{isRecent && (
+					<div className="absolute top-0 right-0 z-20 bg-gradient-to-br from-[#FFD700] to-[#FFA500] text-black text-[10px] font-pixel px-2 py-1 border-b-2 border-l-2 border-black shadow-[2px_2px_0_rgba(0,0,0,0.5)] animate-bounce">
+						NOVO
+					</div>
+				)}
+				{isMostViewed && (
+					<div className="absolute top-0 right-0 z-20 bg-gradient-to-br from-purple-500 to-indigo-600 text-white text-[10px] font-pixel px-2 py-1 border-b-2 border-l-2 border-black shadow-[2px_2px_0_rgba(0,0,0,0.5)]">
+						POPULAR
+					</div>
+				)}
 				{thumbnail && (
-					<div className="aspect-video bg-muted relative border-b-2 border-foreground overflow-hidden">
+					<div
+						className={cn(
+							"bg-muted relative border-b-2 border-foreground overflow-hidden",
+							isShort ? "aspect-[9/16]" : "aspect-video",
+						)}
+					>
 						<img
 							src={thumbnail}
 							alt={title}
@@ -47,7 +64,7 @@ export function ContentCard({
 						<div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60" />
 
 						<div className="absolute top-2 right-2 px-2 py-1 bg-black/80 text-white text-xs font-pixel border border-white/20">
-							{type.toUpperCase()}
+							{isShort ? "SHORT" : type.toUpperCase()}
 						</div>
 					</div>
 				)}

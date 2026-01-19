@@ -1,13 +1,36 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useMutation, useQuery } from "convex/react";
 import { Ban, FileText, Trash2, Users } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
+import { PageTitle } from "@/components/pixel/AnimatedText";
+import { PageWrapper } from "@/components/pixel/PageWrapper";
 import { PixelButton } from "@/components/pixel/PixelButton";
 import { PixelCard } from "@/components/pixel/PixelCard";
+import { authQueryOptions } from "@/lib/auth-query";
 import { api } from "../../../convex/_generated/api";
 
 export const Route = createFileRoute("/admin/")({
+	beforeLoad: async ({ context, location }) => {
+		const sessionData =
+			await context.queryClient.ensureQueryData(authQueryOptions);
+		const user = sessionData?.user;
+
+		if (!user) {
+			throw redirect({
+				to: "/auth/login",
+				search: {
+					redirect: location.href,
+				},
+			});
+		}
+
+		if (user.role !== "admin") {
+			throw redirect({
+				to: "/",
+			});
+		}
+	},
 	component: AdminDashboard,
 });
 
@@ -15,34 +38,40 @@ function AdminDashboard() {
 	const [activeTab, setActiveTab] = useState<"users" | "content">("users");
 
 	return (
-		<div className="space-y-8">
-			<div className="flex gap-4 border-b-4 border-muted pb-4">
-				<TabButton
-					label="USERS"
-					icon={<Users size={16} />}
-					isActive={activeTab === "users"}
-					onClick={() => setActiveTab("users")}
-				/>
-				<TabButton
-					label="CONTENT"
-					icon={<FileText size={16} />}
-					isActive={activeTab === "content"}
-					onClick={() => setActiveTab("content")}
-				/>
-			</div>
+		<PageWrapper>
+			<PageTitle subtitle="Gerencie usuários e conteúdo da plataforma">
+				DASHBOARD ADMIN
+			</PageTitle>
 
-			<AnimatePresence mode="wait">
-				<motion.div
-					key={activeTab}
-					initial={{ opacity: 0, y: 10 }}
-					animate={{ opacity: 1, y: 0 }}
-					exit={{ opacity: 0, y: -10 }}
-					transition={{ duration: 0.2 }}
-				>
-					{activeTab === "users" ? <UsersList /> : <ContentList />}
-				</motion.div>
-			</AnimatePresence>
-		</div>
+			<div className="space-y-8">
+				<div className="flex gap-4 border-b-4 border-muted pb-4">
+					<TabButton
+						label="USERS"
+						icon={<Users size={16} />}
+						isActive={activeTab === "users"}
+						onClick={() => setActiveTab("users")}
+					/>
+					<TabButton
+						label="CONTENT"
+						icon={<FileText size={16} />}
+						isActive={activeTab === "content"}
+						onClick={() => setActiveTab("content")}
+					/>
+				</div>
+
+				<AnimatePresence mode="wait">
+					<motion.div
+						key={activeTab}
+						initial={{ opacity: 0, y: 10 }}
+						animate={{ opacity: 1, y: 0 }}
+						exit={{ opacity: 0, y: -10 }}
+						transition={{ duration: 0.2 }}
+					>
+						{activeTab === "users" ? <UsersList /> : <ContentList />}
+					</motion.div>
+				</AnimatePresence>
+			</div>
+		</PageWrapper>
 	);
 }
 
@@ -59,6 +88,7 @@ function TabButton({
 }) {
 	return (
 		<button
+			type="button"
 			onClick={onClick}
 			className={`flex items-center gap-2 px-4 py-2 font-pixel transition-colors relative ${
 				isActive
