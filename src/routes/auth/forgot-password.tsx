@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { useState } from "react";
-import { authClient } from "@/lib/auth-client";
 import { PixelButton } from "@/components/pixel/PixelButton";
 import { PixelCard } from "@/components/pixel/PixelCard";
 import { Input } from "@/components/ui/input";
@@ -22,10 +21,19 @@ function ForgotPassword() {
 		setMessage(null);
 
 		try {
-			await authClient.forgetPassword({
-				email,
-				redirectURL: `${window.location.origin}/auth/reset-password`,
+			const response = await fetch("/api/auth/forget-password", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					email,
+					redirectURL: `${window.location.origin}/auth/reset-password`,
+				}),
 			});
+
+			if (!response.ok) {
+				throw new Error("Failed to send reset instructions");
+			}
+
 			setMessage({ type: "success", text: "Instruções enviadas para seu e-mail!" });
 			setEmail("");
 		} catch (error) {
