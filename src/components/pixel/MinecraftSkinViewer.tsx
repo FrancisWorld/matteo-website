@@ -43,6 +43,8 @@ export function MinecraftSkinViewer({
 		viewer.animation.speed = 0.5;
 
 		viewerRef.current = viewer;
+		// Reset isPlaying to match the new viewer's animation state
+		setIsPlaying(true);
 
 		return () => {
 			viewer.dispose();
