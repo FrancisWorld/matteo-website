@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "motion/react";
+import { useState } from "react";
+import { authClient } from "@/lib/auth-client";
 import { PixelButton } from "@/components/pixel/PixelButton";
 import { PixelCard } from "@/components/pixel/PixelCard";
 import { Input } from "@/components/ui/input";
@@ -10,6 +12,32 @@ export const Route = createFileRoute("/auth/forgot-password")({
 });
 
 function ForgotPassword() {
+	const [email, setEmail] = useState("");
+	const [isLoading, setIsLoading] = useState(false);
+	const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
+	const handleSubmit = async () => {
+		if (!email) return;
+		setIsLoading(true);
+		setMessage(null);
+
+		try {
+			await authClient.forgetPassword({
+				email,
+				redirectURL: `${window.location.origin}/auth/reset-password`,
+			});
+			setMessage({ type: "success", text: "Instruções enviadas para seu e-mail!" });
+			setEmail("");
+		} catch (error) {
+			setMessage({
+				type: "error",
+				text: "Erro ao enviar instruções. Tente novamente.",
+			});
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
 	return (
 		<div className="min-h-[calc(100vh-5rem)] flex items-center justify-center relative overflow-hidden px-4 py-12">
 			<div className="absolute inset-0 bg-gradient-to-br from-[#0a0a0a] via-[#121212] to-[#0a1a0a]" />
@@ -52,12 +80,33 @@ function ForgotPassword() {
 									E-MAIL
 								</Label>
 								<Input
+									type="email"
 									placeholder="seu@email.com"
+									value={email}
+									onChange={(e) => setEmail(e.target.value)}
 									className="h-12 border-2 border-[#333] bg-[#0a0a0a] rounded-none font-body text-lg focus:border-primary transition-colors"
+									disabled={isLoading}
 								/>
 							</div>
 
-							<PixelButton className="w-full h-12">
+							{message && (
+								<div
+									className={`p-3 font-body text-sm text-center rounded ${
+										message.type === "success"
+											? "bg-green-500/20 text-green-400 border border-green-500/50"
+											: "bg-red-500/20 text-red-400 border border-red-500/50"
+									}`}
+								>
+									{message.text}
+								</div>
+							)}
+
+							<PixelButton
+								onClick={handleSubmit}
+								disabled={isLoading || !email}
+								isLoading={isLoading}
+								className="w-full h-12"
+							>
 								ENVIAR INSTRUÇÕES
 							</PixelButton>
 						</div>

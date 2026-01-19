@@ -25,7 +25,7 @@ export function PixelLayout({ children }: { children: React.ReactNode }) {
 	const avatarUrl = user?.image
 		? user.image
 		: user?.minecraftUsername
-			? `https://minotar.net/avatar/${user.minecraftUsername}/32`
+			? `https://minotar.net/avatar/${encodeURIComponent(user.minecraftUsername)}/32`
 			: null;
 
 	const { scrollY } = useScroll();
