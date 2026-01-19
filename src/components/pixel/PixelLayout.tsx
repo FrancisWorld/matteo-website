@@ -104,10 +104,11 @@ export function PixelLayout({ children }: { children: React.ReactNode }) {
 						)}
 
 						{/* Mobile Menu */}
-						<Sheet open={menuOpen} onOpenChange={setMenuOpen}>
-							<SheetTrigger asChild>
-								<HamburgerIcon isOpen={menuOpen} />
-							</SheetTrigger>
+						<div className="md:hidden">
+							<Sheet open={menuOpen} onOpenChange={setMenuOpen}>
+								<SheetTrigger asChild>
+									<HamburgerIcon isOpen={menuOpen} />
+								</SheetTrigger>
 							<SheetContent side="right" className="w-64 bg-[#1e1e1e] border-l-4 border-[#000000]">
 								<nav className="flex flex-col gap-4 pt-8">
 									<MobileNavLink to="/videos" onClick={() => setMenuOpen(false)}>
@@ -124,7 +125,8 @@ export function PixelLayout({ children }: { children: React.ReactNode }) {
 									</MobileNavLink>
 								</nav>
 							</SheetContent>
-						</Sheet>
+							</Sheet>
+						</div>
 					</div>
 				</div>
 			</header>

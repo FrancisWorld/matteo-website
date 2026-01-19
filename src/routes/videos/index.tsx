@@ -125,12 +125,9 @@ function VideosIndex() {
 						disabled={page === 1}
 						variant="secondary"
 						className="w-full sm:w-auto text-xs md:text-sm 3xl:text-base 4xl:text-lg"
-						asChild
 					>
-						<div className="flex items-center justify-center gap-1">
-							<ChevronLeft size={14} animated={false} className="md:size-4 4xl:size-6" />
-							PREVIOUS
-						</div>
+						<ChevronLeft size={14} animated={false} className="md:size-4 4xl:size-6" />
+						PREVIOUS
 					</PixelButton>
 					<div className="flex items-center gap-1 md:gap-2 3xl:gap-3 4xl:gap-4 font-pixel text-xs md:text-sm 3xl:text-base 4xl:text-lg">
 						<span className="text-muted-foreground">Page</span>
@@ -147,12 +144,9 @@ function VideosIndex() {
 						disabled={page >= totalPages}
 						variant="secondary"
 						className="w-full sm:w-auto text-xs md:text-sm 3xl:text-base 4xl:text-lg"
-						asChild
 					>
-						<div className="flex items-center justify-center gap-1">
-							NEXT
-							<ChevronRight size={14} animated={false} className="md:size-4 4xl:size-6" />
-						</div>
+						NEXT
+						<ChevronRight size={14} animated={false} className="md:size-4 4xl:size-6" />
 					</PixelButton>
 				</div>
 			)}

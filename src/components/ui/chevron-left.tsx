@@ -1,7 +1,7 @@
 import { motion, HTMLMotionProps } from "motion/react";
 import { cn } from "@/lib/utils";
 
-interface ChevronLeftProps extends HTMLMotionProps<"button"> {
+interface ChevronLeftProps extends Omit<HTMLMotionProps<"span">, "children"> {
   size?: number;
   animated?: boolean;
 }
@@ -13,12 +13,12 @@ export function ChevronLeft({
   ...props
 }: ChevronLeftProps) {
   return (
-    <motion.button
+    <motion.span
       whileHover={animated ? { x: -2 } : undefined}
       whileTap={animated ? { scale: 0.95 } : undefined}
       transition={{ duration: 0.2, ease: "easeOut" }}
       className={cn(
-        "inline-flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 disabled:cursor-not-allowed",
+        "inline-flex items-center justify-center",
         className,
       )}
       {...props}
@@ -45,6 +45,6 @@ export function ChevronLeft({
       >
         <polyline points="15 18 9 12 15 6" />
       </motion.svg>
-    </motion.button>
+    </motion.span>
   );
 }
