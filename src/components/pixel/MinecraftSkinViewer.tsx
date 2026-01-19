@@ -56,7 +56,9 @@ export function MinecraftSkinViewer({
 		if (isPlaying) {
 			viewer.animation = null;
 		} else {
-			viewer.animation = new skinview3d.WalkingAnimation();
+			const animation = new skinview3d.WalkingAnimation();
+			animation.speed = 0.5;
+			viewer.animation = animation;
 		}
 		setIsPlaying(!isPlaying);
 	};

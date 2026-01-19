@@ -1,8 +1,20 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
-export const generateUploadUrl = mutation(async (ctx) => {
-	return await ctx.storage.generateUploadUrl();
+export const generateUploadUrl = mutation({
+	args: { token: v.string() },
+	handler: async (ctx, args) => {
+		const session = await ctx.db
+			.query("sessions")
+			.withIndex("by_token", (q) => q.eq("token", args.token))
+			.first();
+
+		if (!session || session.expiresAt < Date.now()) {
+			throw new Error("Unauthorized: Invalid or expired session");
+		}
+
+		return await ctx.storage.generateUploadUrl();
+	},
 });
 
 export const updateAvatar = mutation({
@@ -31,6 +43,18 @@ export const updateAvatar = mutation({
 
 		const imageUrl = await ctx.storage.getUrl(args.storageId);
 		if (!imageUrl) throw new Error("Image not found");
+
+		// Delete old avatar from storage if it was a Convex storage file
+		if (user.image && user.image.includes("/api/storage/")) {
+			try {
+				const oldStorageId = user.image.split("/api/storage/")[1]?.split("?")[0];
+				if (oldStorageId) {
+					await ctx.storage.delete(oldStorageId as any);
+				}
+			} catch {
+				// Ignore deletion errors (file may already be deleted or external URL)
+			}
+		}
 
 		await ctx.db.patch(user._id, { image: imageUrl, updatedAt: Date.now() });
 
