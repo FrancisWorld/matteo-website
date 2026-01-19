@@ -24,9 +24,10 @@ export const Route = createFileRoute("/videos/$id")({
 function VideoDetail() {
 	const { id } = Route.useParams();
 	const video = useQuery(api.videos.getById, { id: id as any });
-	const recentVideos = useQuery(api.videos.getRecent, { limit: 4 });
+	const recentVideos = useQuery(api.videos.getRecent, { limit: 5 });
+	const popularVideos = useQuery(api.videos.getMostViewed, { limit: 5 });
 
-	const isShortVideo = (v: typeof video) => {
+	const isShortVideo = (v: any) => {
 		if (!v) return false;
 		const titleLower = v.title.toLowerCase();
 		if (titleLower.includes("#shorts") || titleLower.includes("#short"))
@@ -34,7 +35,6 @@ function VideoDetail() {
 
 		if (v.duration) {
 			if (v.duration.includes("H")) return false;
-			// Matches PT1M30S etc
 			const minuteMatch = v.duration.match(/(\d+)M/);
 			const minutes = minuteMatch ? parseInt(minuteMatch[1]) : 0;
 			const secondMatch = v.duration.match(/(\d+)S/);
@@ -44,13 +44,39 @@ function VideoDetail() {
 		return false;
 	};
 
-	const isShort = isShortVideo(video);
+	const isLoading = video === undefined;
 
-	if (video === undefined) {
+	if (isLoading) {
 		return (
-			<PageWrapper className="flex items-center justify-center">
-				<div className="font-pixel text-xl animate-pulse">
-					CARREGANDO VÍDEO...
+			<PageWrapper className="space-y-8 pb-16">
+				<div className="py-6">
+					<div className="h-10 w-32 bg-muted animate-pulse rounded" />
+				</div>
+				<div className="grid lg:grid-cols-3 gap-8 md:gap-12">
+					<div className="lg:col-span-2 space-y-6">
+						<div className="aspect-video bg-muted animate-pulse border-4 border-muted" />
+						<div className="space-y-4">
+							<div className="h-8 w-3/4 bg-muted animate-pulse rounded" />
+							<div className="flex gap-4">
+								<div className="h-6 w-24 bg-muted animate-pulse rounded" />
+								<div className="h-6 w-24 bg-muted animate-pulse rounded" />
+							</div>
+							<div className="space-y-2 pt-4">
+								<div className="h-4 w-full bg-muted animate-pulse rounded" />
+								<div className="h-4 w-full bg-muted animate-pulse rounded" />
+								<div className="h-4 w-2/3 bg-muted animate-pulse rounded" />
+							</div>
+						</div>
+					</div>
+					<div className="space-y-6">
+						<div className="h-8 w-48 bg-muted animate-pulse rounded" />
+						{[1, 2, 3].map((i) => (
+							<div
+								key={i}
+								className="h-24 bg-muted animate-pulse rounded border-2 border-muted"
+							/>
+						))}
+					</div>
 				</div>
 			</PageWrapper>
 		);
@@ -58,7 +84,7 @@ function VideoDetail() {
 
 	if (!video) {
 		return (
-			<PageWrapper className="flex items-center justify-center">
+			<PageWrapper className="flex items-center justify-center min-h-[60vh]">
 				<PixelCard className="text-center p-8 md:p-12">
 					<h1 className="text-2xl md:text-4xl font-pixel mb-4">
 						VÍDEO NÃO ENCONTRADO
@@ -74,28 +100,34 @@ function VideoDetail() {
 		);
 	}
 
+	const isShort = isShortVideo(video);
+
 	return (
-		<PageWrapper className="space-y-8 pb-16">
-			<Link to="/videos">
-				<PixelButton
-					variant="outline"
-					size="sm"
-					className="gap-2 text-xs md:text-sm"
-				>
-					<ChevronLeft className="w-4 h-4" />
-					Voltar para Vídeos
-				</PixelButton>
-			</Link>
+		<PageWrapper className="space-y-6 md:space-y-8 pb-16">
+			{/* Back Button with proper spacing */}
+			<div className="pt-4 md:pt-6">
+				<Link to="/videos">
+					<PixelButton
+						variant="outline"
+						size="sm"
+						className="gap-2 text-xs md:text-sm"
+					>
+						<ChevronLeft className="w-4 h-4" />
+						Voltar para Vídeos
+					</PixelButton>
+				</Link>
+			</div>
 
 			<div className="grid lg:grid-cols-3 gap-8 md:gap-12">
+				{/* Main Content */}
 				<div className="lg:col-span-2 space-y-6 md:space-y-8">
 					<motion.div
 						initial={{ opacity: 0, y: 20 }}
 						animate={{ opacity: 1, y: 0 }}
 						className={cn(
-							"bg-black border-4 border-foreground shadow-[4px_4px_0px_0px_var(--foreground)] md:shadow-[8px_8px_0px_0px_var(--foreground)] overflow-hidden",
+							"bg-black border-4 border-foreground shadow-[4px_4px_0px_0px_var(--foreground)] md:shadow-[8px_8px_0px_0px_var(--foreground)] overflow-hidden mx-auto",
 							isShort
-								? "aspect-[9/16] max-w-sm mx-auto w-full"
+								? "aspect-[9/16] w-full max-w-[400px]" // Limit width for Shorts on desktop
 								: "aspect-video w-full",
 						)}
 					>
@@ -111,79 +143,138 @@ function VideoDetail() {
 						/>
 					</motion.div>
 
-					<div className="space-y-4 md:space-y-6">
-						<h1 className="text-2xl md:text-4xl font-pixel leading-tight text-primary pixel-text-shadow">
+					<div className="space-y-4 md:space-y-6 px-1 md:px-0">
+						<h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-pixel leading-tight text-primary pixel-text-shadow break-words">
 							{video.title}
 						</h1>
 
-						<div className="flex flex-wrap gap-4 text-xs md:text-sm font-pixel text-muted-foreground border-b-2 border-muted pb-4 md:pb-6">
-							<div className="flex items-center gap-2 bg-muted/20 px-3 py-1.5 rounded-none border border-muted">
-								<Eye size={16} />
-								<span>{video.viewCount.toLocaleString()} VISUALIZAÇÕES</span>
-							</div>
-							<div className="flex items-center gap-2 bg-muted/20 px-3 py-1.5 rounded-none border border-muted">
-								<ThumbsUp size={16} />
-								<span>{video.likeCount?.toLocaleString() || 0} LIKES</span>
-							</div>
-							<div className="flex items-center gap-2 bg-muted/20 px-3 py-1.5 rounded-none border border-muted">
-								<MessageSquare size={16} />
+						<div className="flex flex-wrap gap-2 md:gap-4 text-[10px] md:text-sm font-pixel text-muted-foreground border-b-2 border-muted pb-4 md:pb-6">
+							<div className="flex items-center gap-1.5 md:gap-2 bg-muted/20 px-2 md:px-3 py-1 md:py-1.5 border border-muted">
+								<Eye className="w-3 h-3 md:w-4 md:h-4" />
 								<span>
-									{video.commentCount?.toLocaleString() || 0} COMENTÁRIOS
+									{video.viewCount.toLocaleString()}{" "}
+									<span className="hidden sm:inline">VISUALIZAÇÕES</span>
+									<span className="sm:hidden">VIEWS</span>
 								</span>
 							</div>
-							<div className="flex items-center gap-2 ml-auto bg-primary/10 px-3 py-1.5 rounded-none border border-primary/20 text-primary">
-								<Calendar size={16} />
+							<div className="flex items-center gap-1.5 md:gap-2 bg-muted/20 px-2 md:px-3 py-1 md:py-1.5 border border-muted">
+								<ThumbsUp className="w-3 h-3 md:w-4 md:h-4" />
+								<span>{video.likeCount?.toLocaleString() || 0} LIKES</span>
+							</div>
+							<div className="flex items-center gap-1.5 md:gap-2 bg-muted/20 px-2 md:px-3 py-1 md:py-1.5 border border-muted">
+								<MessageSquare className="w-3 h-3 md:w-4 md:h-4" />
+								<span>
+									{video.commentCount?.toLocaleString() || 0}{" "}
+									<span className="hidden sm:inline">COMENTÁRIOS</span>
+									<span className="sm:hidden">COMS</span>
+								</span>
+							</div>
+							<div className="flex items-center gap-1.5 md:gap-2 ml-auto bg-primary/10 px-2 md:px-3 py-1 md:py-1.5 border border-primary/20 text-primary">
+								<Calendar className="w-3 h-3 md:w-4 md:h-4" />
 								<span>{new Date(video.publishedAt).toLocaleDateString()}</span>
 							</div>
 						</div>
 
-						<div className="prose prose-sm md:prose-lg prose-invert max-w-none font-body leading-relaxed whitespace-pre-wrap text-gray-300">
+						<div className="prose prose-sm md:prose-base prose-invert max-w-none font-body leading-relaxed whitespace-pre-wrap text-gray-300 break-words">
 							{video.description}
 						</div>
 					</div>
 				</div>
 
-				<div className="space-y-6">
-					<h2 className="text-xl md:text-2xl font-pixel border-l-4 border-primary pl-4">
-						VÍDEOS RECENTES
-					</h2>
-					<div className="space-y-4">
-						{recentVideos
-							?.filter((v: any) => v._id !== video._id)
-							.map((v: any) => (
-								<Link
-									key={v._id}
-									to="/videos/$id"
-									params={{ id: v._id }}
-									className="block group"
-								>
-									<PixelCard
-										hoverEffect
-										className="p-0 overflow-hidden flex gap-3 h-24 md:h-28"
-									>
-										<div className="w-32 md:w-40 h-full bg-black relative flex-shrink-0 border-r-2 border-foreground">
-											<img
-												src={v.thumbnail}
-												alt={v.title}
-												className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-											/>
-											<div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors" />
-										</div>
-										<div className="py-2 pr-2 flex-1 flex flex-col justify-center gap-1">
-											<h3 className="font-pixel text-xs md:text-sm line-clamp-2 group-hover:text-primary transition-colors leading-tight">
-												{v.title}
-											</h3>
-											<p className="text-[10px] md:text-xs text-muted-foreground font-body flex items-center gap-1">
-												<Calendar size={10} />
-												{new Date(v.publishedAt).toLocaleDateString()}
-											</p>
-										</div>
-									</PixelCard>
-								</Link>
-							))}
+				{/* Sidebar */}
+				<div className="space-y-8 md:space-y-12">
+					{/* Popular Videos */}
+					<div className="space-y-4 md:space-y-6">
+						<h2 className="text-lg md:text-xl font-pixel border-l-4 border-[#FFD700] pl-3 md:pl-4 text-[#FFD700]">
+							POPULARES
+						</h2>
+						<div className="space-y-3 md:space-y-4">
+							{popularVideos
+								?.filter((v: any) => v._id !== video._id)
+								.slice(0, 3)
+								.map((v: any) => (
+									<SidebarVideoCard key={v._id} video={v} isPopular />
+								))}
+						</div>
+					</div>
+
+					{/* Recent Videos */}
+					<div className="space-y-4 md:space-y-6">
+						<h2 className="text-lg md:text-xl font-pixel border-l-4 border-primary pl-3 md:pl-4">
+							RECENTES
+						</h2>
+						<div className="space-y-3 md:space-y-4">
+							{recentVideos
+								?.filter((v: any) => v._id !== video._id)
+								.slice(0, 4)
+								.map((v: any) => (
+									<SidebarVideoCard key={v._id} video={v} />
+								))}
+						</div>
 					</div>
 				</div>
 			</div>
 		</PageWrapper>
+	);
+}
+
+function SidebarVideoCard({
+	video,
+	isPopular,
+}: {
+	video: any;
+	isPopular?: boolean;
+}) {
+	const isShort = video.title.toLowerCase().includes("#shorts");
+
+	return (
+		<Link to="/videos/$id" params={{ id: video._id }} className="block group">
+			<PixelCard
+				hoverEffect
+				className={cn(
+					"p-0 overflow-hidden flex gap-3 h-20 md:h-24 transition-all duration-200",
+					isPopular && "border-l-4 border-l-[#FFD700]",
+				)}
+			>
+				<div
+					className={cn(
+						"bg-black relative flex-shrink-0 border-r-2 border-foreground overflow-hidden",
+						isShort ? "w-12 md:w-16" : "w-28 md:w-36",
+					)}
+				>
+					<img
+						src={video.thumbnail}
+						alt={video.title}
+						className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+					/>
+					{isShort && (
+						<div className="absolute top-1 right-1 bg-black/80 text-[8px] text-white px-1 border border-white/20">
+							⚡
+						</div>
+					)}
+				</div>
+				<div className="py-1.5 pr-2 flex-1 flex flex-col justify-center gap-1 min-w-0">
+					<h3 className="font-pixel text-xs md:text-sm line-clamp-2 group-hover:text-primary transition-colors leading-tight break-words">
+						{video.title}
+					</h3>
+					<div className="flex items-center gap-2 text-[9px] md:text-[10px] text-muted-foreground font-body mt-auto">
+						<span className="flex items-center gap-1">
+							<Eye size={10} />
+							{video.viewCount >= 1000
+								? `${(video.viewCount / 1000).toFixed(1)}K`
+								: video.viewCount}
+						</span>
+						{!isPopular && (
+							<span className="flex items-center gap-1 ml-auto">
+								{new Date(video.publishedAt).toLocaleDateString(undefined, {
+									month: "numeric",
+									day: "numeric",
+								})}
+							</span>
+						)}
+					</div>
+				</div>
+			</PixelCard>
+		</Link>
 	);
 }

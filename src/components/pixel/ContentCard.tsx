@@ -51,7 +51,7 @@ export function ContentCard({
 				{thumbnail && (
 					<div
 						className={cn(
-							"bg-muted relative border-b-2 md:border-b-3 4xl:border-b-4 border-foreground overflow-hidden",
+							"bg-muted relative border-b-2 md:border-b-4 border-foreground overflow-hidden flex-shrink-0",
 							isShort ? "aspect-[9/16]" : "aspect-video",
 						)}
 					>
@@ -65,24 +65,29 @@ export function ContentCard({
 						/>
 						<div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60" />
 
-						<div className="absolute top-2 md:top-3 4xl:top-4 right-2 md:right-3 4xl:right-4 px-2 md:px-3 4xl:px-4 py-1 bg-black/80 text-white text-[10px] md:text-xs 4xl:text-sm font-pixel border border-white/20 z-10">
+						<div className="absolute top-2 md:top-3 right-2 md:right-3 px-2 py-1 bg-black/80 text-white text-[10px] font-pixel border border-white/20 z-10">
 							{isShort ? "SHORT" : type.toUpperCase()}
 						</div>
 					</div>
 				)}
 
-				<div className="p-3 md:p-4 3xl:p-5 4xl:p-6 flex-1 flex flex-col gap-2">
-					<h3 className="font-pixel text-base md:text-lg 3xl:text-xl 4xl:text-2xl leading-tight line-clamp-2 group-hover:text-primary transition-colors">
+				<div className="p-4 flex-1 flex flex-col gap-3">
+					<h3
+						className={cn(
+							"font-pixel leading-tight group-hover:text-primary transition-colors line-clamp-2",
+							isShort ? "text-sm md:text-base" : "text-base md:text-lg",
+						)}
+					>
 						{title}
 					</h3>
 
 					{subtitle && (
-						<p className="text-muted-foreground line-clamp-2 font-body text-xs md:text-sm 3xl:text-base 4xl:text-lg">
+						<p className="text-muted-foreground line-clamp-2 font-body text-xs md:text-sm">
 							{subtitle}
 						</p>
 					)}
 
-					<div className="mt-auto pt-3 md:pt-4 flex justify-between items-center gap-2 text-[8px] md:text-xs 3xl:text-sm 4xl:text-base text-muted-foreground font-pixel border-t border-white/10">
+					<div className="mt-auto pt-3 flex justify-between items-center gap-2 text-[10px] md:text-xs text-muted-foreground font-pixel border-t border-white/10">
 						{metadata?.map((meta) => (
 							<span key={meta.label} className="whitespace-nowrap">
 								{meta.value} {meta.label}
