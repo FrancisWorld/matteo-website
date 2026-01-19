@@ -159,46 +159,50 @@ function VideosIndex() {
 							SHORTS <span className="text-white text-sm">⚡</span>
 						</h2>
 
-						<div className="px-8 md:px-12">
-							<Carousel
-								opts={{
-									align: "start",
-									loop: false,
-								}}
-								className="w-full"
-							>
-								<CarouselContent className="-ml-2 md:-ml-4">
-									{shorts.map((video: any, i: number) => (
-										<CarouselItem
-											key={video._id}
-											className="pl-2 md:pl-4 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6"
-										>
-											<motion.div
-												initial={{ opacity: 0, scale: 0.9 }}
-												animate={{ opacity: 1, scale: 1 }}
-												transition={{ delay: i * 0.05 }}
+						<div className="relative">
+							<div className="absolute left-0 top-0 bottom-0 w-8 md:w-16 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+							<div className="absolute right-0 top-0 bottom-0 w-8 md:w-16 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+							<div className="px-8 md:px-12">
+								<Carousel
+									opts={{
+										align: "start",
+										loop: false,
+									}}
+									className="w-full"
+								>
+									<CarouselContent className="-ml-2 md:-ml-4">
+										{shorts.map((video: any, i: number) => (
+											<CarouselItem
+												key={video._id}
+												className="pl-2 md:pl-4 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6"
 											>
-												<ContentCard
-													title={video.title}
-													type="video"
-													thumbnail={video.thumbnailHigh || video.thumbnail}
-													href={`/videos/${video._id}`}
-													isShort
-													isRecent={isRecent(video.publishedAt)}
-													metadata={[
-														{
-															label: "VISUALIZAÇÕES",
-															value: formatViews(video.viewCount),
-														},
-													]}
-												/>
-											</motion.div>
-										</CarouselItem>
-									))}
-								</CarouselContent>
-								<CarouselPrevious className="left-0 md:-left-12" />
-								<CarouselNext className="right-0 md:-right-12" />
-							</Carousel>
+												<motion.div
+													initial={{ opacity: 0, scale: 0.9 }}
+													animate={{ opacity: 1, scale: 1 }}
+													transition={{ delay: i * 0.05 }}
+												>
+													<ContentCard
+														title={video.title}
+														type="video"
+														thumbnail={video.thumbnailHigh || video.thumbnail}
+														href={`/videos/${video._id}`}
+														isShort
+														isRecent={isRecent(video.publishedAt)}
+														metadata={[
+															{
+																label: "VISUALIZAÇÕES",
+																value: formatViews(video.viewCount),
+															},
+														]}
+													/>
+												</motion.div>
+											</CarouselItem>
+										))}
+									</CarouselContent>
+									<CarouselPrevious className="left-0 md:-left-12 h-10 w-10 border-2 border-foreground bg-background hover:bg-muted text-foreground rounded-none pixel-shadow-3d" />
+									<CarouselNext className="right-0 md:-right-12 h-10 w-10 border-2 border-foreground bg-background hover:bg-muted text-foreground rounded-none pixel-shadow-3d" />
+								</Carousel>
+							</div>
 						</div>
 					</section>
 				)}
