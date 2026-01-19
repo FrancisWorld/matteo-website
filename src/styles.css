@@ -79,6 +79,25 @@ code {
   text-shadow: 4px 4px 0px rgba(0,0,0,0.8);
 }
 
+/* Global Link Styling */
+a:not(.no-style) {
+  @apply cursor-pointer transition-colors duration-200;
+}
+
+/* Links inside prose content (descriptions, blogs) */
+.prose a {
+  @apply text-blue-400 no-underline border-b border-blue-400/50 hover:border-blue-400 hover:text-blue-300 transition-all inline-flex items-center gap-1;
+}
+
+.prose a::after {
+  content: "↗";
+  @apply text-[0.8em] transition-transform duration-200;
+}
+
+.prose a:hover::after {
+  @apply translate-x-0.5 -translate-y-0.5;
+}
+
 @theme inline {
   --font-pixel: 'Press Start 2P', cursive;
   --font-body: 'VT323', monospace;
