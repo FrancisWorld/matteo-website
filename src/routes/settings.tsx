@@ -73,7 +73,8 @@ function SettingsPage() {
 			window.location.reload();
 		} catch (error) {
 			console.error(error);
-			alert("Falha ao atualizar avatar");
+			const errorMessage = error instanceof Error ? error.message : "Falha ao atualizar avatar";
+			alert(errorMessage);
 		} finally {
 			setIsUploading(false);
 		}
@@ -87,7 +88,8 @@ function SettingsPage() {
 			window.location.reload();
 		} catch (error) {
 			console.error(error);
-			alert("Erro ao salvar username");
+			const errorMessage = error instanceof Error ? error.message : "Erro ao salvar username";
+			alert(errorMessage);
 		} finally {
 			setIsSavingUsername(false);
 		}
