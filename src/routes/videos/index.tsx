@@ -13,10 +13,10 @@ import { api } from "../../../convex/_generated/api";
 export const Route = createFileRoute("/videos/")({
 	head: () => ({
 		meta: [
-			{ title: "Videos | Matteo" },
+			{ title: "Vídeos | Matteo" },
 			{
 				name: "description",
-				content: "Watch the latest Minecraft adventures from Matteo",
+				content: "Assista às últimas aventuras de Minecraft do Matteo",
 			},
 		],
 	}),
@@ -62,12 +62,12 @@ function VideosIndex() {
 			<div className="space-y-8 md:space-y-12 3xl:space-y-16">
 				<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 md:gap-4">
 					<h1 className="text-2xl sm:text-3xl md:text-4xl 3xl:text-5xl 4xl:text-6xl font-pixel text-white">
-						VIDEOS
+						VÍDEOS
 					</h1>
 					<div className="relative w-full sm:w-auto sm:max-w-sm md:max-w-md 3xl:max-w-lg 4xl:max-w-2xl">
 						<input
 							type="text"
-							placeholder="SEARCH VIDEOS..."
+							placeholder="PESQUISAR VÍDEOS..."
 							className="w-full h-10 md:h-12 3xl:h-14 4xl:h-16 pl-10 md:pl-12 4xl:pl-14 pr-3 md:pr-4 4xl:pr-6 bg-input border-2 md:border-3 4xl:border-4 border-foreground font-pixel text-xs md:text-sm 3xl:text-base 4xl:text-lg focus:outline-none focus:ring-2 focus:ring-primary"
 							value={search}
 							onChange={(e) => {
@@ -82,7 +82,59 @@ function VideosIndex() {
 					</div>
 				</div>
 
-				{/* SHORTS SECTION */}
+				{/* VIDEOS SECTION (Moved above Shorts) */}
+				<section className="space-y-4 md:space-y-6">
+					<h2 className="text-xl md:text-2xl 3xl:text-3xl font-pixel text-white pixel-text-shadow">
+						TODOS OS VÍDEOS
+					</h2>
+					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6 gap-3 md:gap-4 3xl:gap-5 4xl:gap-6">
+						{videos === undefined ? (
+							Array.from({ length: 6 }).map((_, i) => (
+								<div
+									key={`skeleton-${i}`}
+									className="aspect-video bg-muted animate-pulse border-2 md:border-3 4xl:border-4 border-muted"
+								/>
+							))
+						) : videos.length === 0 ? (
+							<div className="col-span-full text-center py-12 md:py-16 3xl:py-20 4xl:py-32">
+								<p className="text-xl md:text-2xl 3xl:text-3xl 4xl:text-4xl font-pixel text-muted-foreground">
+									NENHUM VÍDEO ENCONTRADO
+								</p>
+							</div>
+						) : (
+							videos.map((video: any, i: number) => (
+								<motion.div
+									key={video._id}
+									initial={{ opacity: 0, y: 20 }}
+									animate={{ opacity: 1, y: 0 }}
+									transition={{ delay: i * 0.05 }}
+									className="h-full"
+								>
+									<ContentCard
+										title={video.title}
+										type="video"
+										thumbnail={video.thumbnailHigh || video.thumbnail}
+										href={`/videos/${video._id}`}
+										isMostViewed={isMostViewed(video._id)}
+										isRecent={isRecent(video.publishedAt)}
+										metadata={[
+											{
+												label: "VISUALIZAÇÕES",
+												value: formatViews(video.viewCount),
+											},
+											{
+												label: "EM",
+												value: new Date(video.publishedAt).toLocaleDateString(),
+											},
+										]}
+									/>
+								</motion.div>
+							))
+						)}
+					</div>
+				</section>
+
+				{/* SHORTS SECTION (Moved below Videos) */}
 				{shorts && shorts.length > 0 && !search && (
 					<section className="space-y-4 md:space-y-6">
 						<h2 className="text-xl md:text-2xl 3xl:text-3xl font-pixel text-red-500 pixel-text-shadow flex items-center gap-2">
@@ -104,7 +156,10 @@ function VideosIndex() {
 										isShort
 										isRecent={isRecent(video.publishedAt)}
 										metadata={[
-											{ label: "VIEWS", value: formatViews(video.viewCount) },
+											{
+												label: "VISUALIZAÇÕES",
+												value: formatViews(video.viewCount),
+											},
 										]}
 									/>
 								</motion.div>
@@ -112,55 +167,6 @@ function VideosIndex() {
 						</div>
 					</section>
 				)}
-
-				{/* VIDEOS SECTION */}
-				<section className="space-y-4 md:space-y-6">
-					<h2 className="text-xl md:text-2xl 3xl:text-3xl font-pixel text-white pixel-text-shadow">
-						ALL VIDEOS
-					</h2>
-					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-6 gap-3 md:gap-4 3xl:gap-5 4xl:gap-6">
-						{videos === undefined ? (
-							Array.from({ length: 6 }).map((_, i) => (
-								<div
-									key={`skeleton-${i}`}
-									className="aspect-video bg-muted animate-pulse border-2 md:border-3 4xl:border-4 border-muted"
-								/>
-							))
-						) : videos.length === 0 ? (
-							<div className="col-span-full text-center py-12 md:py-16 3xl:py-20 4xl:py-32">
-								<p className="text-xl md:text-2xl 3xl:text-3xl 4xl:text-4xl font-pixel text-muted-foreground">
-									NO VIDEOS FOUND
-								</p>
-							</div>
-						) : (
-							videos.map((video: any, i: number) => (
-								<motion.div
-									key={video._id}
-									initial={{ opacity: 0, y: 20 }}
-									animate={{ opacity: 1, y: 0 }}
-									transition={{ delay: i * 0.05 }}
-									className="h-full"
-								>
-									<ContentCard
-										title={video.title}
-										type="video"
-										thumbnail={video.thumbnailHigh || video.thumbnail}
-										href={`/videos/${video._id}`}
-										isMostViewed={isMostViewed(video._id)}
-										isRecent={isRecent(video.publishedAt)}
-										metadata={[
-											{ label: "VIEWS", value: formatViews(video.viewCount) },
-											{
-												label: "AGO",
-												value: new Date(video.publishedAt).toLocaleDateString(),
-											},
-										]}
-									/>
-								</motion.div>
-							))
-						)}
-					</div>
-				</section>
 
 				{videos && videos.length > 0 && !search && (
 					<div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-8 md:mt-12 pt-6 md:pt-8 border-t-2 md:border-t-3 4xl:border-t-4 border-muted">
@@ -175,14 +181,14 @@ function VideosIndex() {
 								animated={false}
 								className="md:size-4 4xl:size-6"
 							/>
-							PREVIOUS
+							ANTERIOR
 						</PixelButton>
 						<div className="flex items-center gap-1 md:gap-2 3xl:gap-3 4xl:gap-4 font-pixel text-xs md:text-sm 3xl:text-base 4xl:text-lg">
-							<span className="text-muted-foreground">Page</span>
+							<span className="text-muted-foreground">Página</span>
 							<span className="bg-primary text-primary-foreground px-2 md:px-3 4xl:px-4 py-1 md:py-1.5 4xl:py-2">
 								{page}
 							</span>
-							<span className="text-muted-foreground">of</span>
+							<span className="text-muted-foreground">de</span>
 							<span className="bg-primary text-primary-foreground px-2 md:px-3 4xl:px-4 py-1 md:py-1.5 4xl:py-2">
 								{totalPages}
 							</span>
@@ -193,7 +199,7 @@ function VideosIndex() {
 							variant="secondary"
 							className="w-full sm:w-auto text-xs md:text-sm 3xl:text-base 4xl:text-lg"
 						>
-							NEXT
+							PRÓXIMO
 							<ChevronRight
 								size={14}
 								animated={false}

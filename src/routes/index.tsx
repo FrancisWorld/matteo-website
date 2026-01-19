@@ -157,12 +157,6 @@ function Home() {
 						</Link>
 					</div>
 
-					{/* Responsive Grid replacing simple Carousel for better mobile/desktop handling if desired, or restore Carousel */}
-					{/* The user liked the Carousel from main. Let's restore the Grid for layout but use the style. */}
-					{/* Actually, main used a GRID for recent videos, not carousel. Wait, let me check main again. */}
-					{/* Main: className="grid md:grid-cols-2 lg:grid-cols-4 gap-6" */}
-					{/* I will use the responsive grid from feat/responsive-design but with main's motion animations */}
-
 					<motion.div
 						variants={staggerContainer}
 						initial="initial"
@@ -180,7 +174,7 @@ function Home() {
 											thumbnail={video.thumbnailHigh || video.thumbnail}
 											metadata={[
 												{
-													label: "VIEWS",
+													label: "VISUALIZAÇÕES",
 													value: video.viewCount.toLocaleString(),
 												},
 											]}
@@ -277,12 +271,12 @@ function Home() {
 												thumbnail={quiz.coverImage}
 												metadata={[
 													{
-														label: "Q",
+														label: "PERGUNTAS",
 														value: quiz.questions.length.toString(),
 													},
 													{
-														label: "DIFF",
-														value: quiz.difficulty?.toUpperCase() || "MED",
+														label: "DIF.",
+														value: quiz.difficulty?.toUpperCase() || "MÉD",
 													},
 												]}
 											/>
