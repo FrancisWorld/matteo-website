@@ -14,6 +14,7 @@ export interface ContentCardProps {
 	isRecent?: boolean;
 	isShort?: boolean;
 	className?: string;
+	orientation?: "vertical" | "horizontal";
 }
 
 export function ContentCard({
@@ -27,20 +28,22 @@ export function ContentCard({
 	isRecent,
 	isShort,
 	className,
+	orientation = "vertical",
 }: ContentCardProps) {
 	return (
 		<Link to={href} className="block group h-full cursor-pointer">
 			<PixelCard
 				hoverEffect
 				className={cn(
-					"h-full p-0 overflow-hidden flex flex-col relative",
+					"h-full p-0 overflow-hidden flex relative",
+					orientation === "vertical" ? "flex-col" : "flex-row h-24 md:h-28",
 					isMostViewed && "enchanted ring-2 ring-purple-500",
 					isRecent && "gold-glow ring-2 ring-[#FFD700]",
 					className,
 				)}
 			>
 				{isRecent && (
-					<div className="absolute top-0 right-0 z-20 bg-gradient-to-br from-[#FFD700] to-[#FFA500] text-black text-[9px] md:text-[10px] font-pixel px-1.5 py-0.5 md:px-2 md:py-1 border-b-2 border-l-2 border-black shadow-[1px_1px_0_rgba(0,0,0,0.5)] animate-bounce">
+					<div className="absolute top-0 left-0 z-20 bg-gradient-to-br from-[#FFD700] to-[#FFA500] text-black text-[9px] md:text-[10px] font-pixel px-1.5 py-0.5 md:px-2 md:py-1 border-b-2 border-r-2 border-black shadow-[1px_1px_0_rgba(0,0,0,0.5)] animate-bounce">
 						NOVO
 					</div>
 				)}
@@ -52,8 +55,14 @@ export function ContentCard({
 				{thumbnail && (
 					<div
 						className={cn(
-							"bg-muted relative border-b-2 md:border-b-4 border-foreground overflow-hidden flex-shrink-0",
-							isShort ? "aspect-[9/16]" : "aspect-video",
+							"bg-muted relative border-foreground overflow-hidden flex-shrink-0",
+							orientation === "vertical"
+								? isShort
+									? "aspect-[9/16] border-b-2 md:border-b-4"
+									: "aspect-video border-b-2 md:border-b-4"
+								: isShort
+									? "w-16 md:w-20 border-r-2"
+									: "w-32 md:w-40 border-r-2",
 						)}
 					>
 						<img
@@ -66,19 +75,35 @@ export function ContentCard({
 						/>
 						<div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60" />
 
-						<div className="absolute top-2 md:top-3 right-2 md:right-3 px-1.5 py-0.5 md:px-2 md:py-1 bg-black/80 text-white text-[9px] md:text-[10px] font-pixel border border-white/20 z-10">
-							{isShort ? "SHORT" : type.toUpperCase()}
-						</div>
+						{orientation === "vertical" && (
+							<div className="absolute top-2 md:top-3 right-2 md:right-3 px-1.5 py-0.5 md:px-2 md:py-1 bg-black/80 text-white text-[9px] md:text-[10px] font-pixel border border-white/20 z-10">
+								{isShort ? "SHORT" : type.toUpperCase()}
+							</div>
+						)}
+						{orientation === "horizontal" && isShort && (
+							<div className="absolute top-1 right-1 bg-black/80 text-[8px] text-white px-1 border border-white/20 z-10">
+								⚡
+							</div>
+						)}
 					</div>
 				)}
 
-				<div className="p-3 md:p-4 flex-1 flex flex-col gap-2 md:gap-3">
+				<div
+					className={cn(
+						"flex-1 flex flex-col",
+						orientation === "vertical"
+							? "p-3 md:p-4 gap-2 md:gap-3"
+							: "p-2 md:p-3 gap-1 md:gap-2 justify-center",
+					)}
+				>
 					<h3
 						className={cn(
 							"font-pixel leading-tight group-hover:text-primary transition-colors line-clamp-2",
-							isShort
-								? "text-xs md:text-sm"
-								: "text-sm md:text-base lg:text-lg",
+							orientation === "vertical"
+								? isShort
+									? "text-xs md:text-sm"
+									: "text-sm md:text-base lg:text-lg"
+								: "text-xs md:text-sm",
 						)}
 					>
 						{title}
@@ -90,7 +115,14 @@ export function ContentCard({
 						</p>
 					)}
 
-					<div className="mt-auto pt-2 md:pt-3 flex justify-between items-center gap-2 text-[9px] md:text-[10px] text-muted-foreground font-pixel border-t border-white/10">
+					<div
+						className={cn(
+							"flex items-center gap-2 text-[9px] md:text-[10px] text-muted-foreground font-pixel",
+							orientation === "vertical"
+								? "mt-auto pt-2 md:pt-3 justify-between border-t border-white/10"
+								: "mt-auto",
+						)}
+					>
 						{metadata?.map((meta) => (
 							<span
 								key={meta.label}

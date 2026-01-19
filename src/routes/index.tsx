@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "convex/react";
-import { BookOpen, ChevronRight, Eye, Trophy, Youtube } from "lucide-react";
+import { BookOpen, Eye, Trophy, Youtube } from "lucide-react";
 import { motion } from "motion/react";
 import { AnimatedText } from "@/components/pixel/AnimatedText";
 import { ContentCard } from "@/components/pixel/ContentCard";
@@ -24,6 +24,19 @@ function Home() {
 	const recentQuizzes = useQuery(api.quizzes.list, { limit: 3 });
 
 	const heroVideo = mostViewedVideos?.[0];
+
+	const isMostViewed = (video: any) => {
+		// Simple check if video is in the top 3 most viewed list we fetched
+		return (
+			mostViewedVideos?.some((v) => v._id === video._id) ||
+			video.viewCount > 10000
+		);
+	};
+
+	const isRecent = (timestamp: number) => {
+		const threeDays = 3 * 24 * 60 * 60 * 1000;
+		return Date.now() - timestamp < threeDays;
+	};
 
 	return (
 		<PageWrapper
@@ -165,6 +178,8 @@ function Home() {
 											type="video"
 											href={`/videos/${video._id}`}
 											thumbnail={video.thumbnailHigh || video.thumbnail}
+											isMostViewed={isMostViewed(video)}
+											isRecent={isRecent(video.publishedAt)}
 											metadata={[
 												{
 													label: "",
@@ -222,7 +237,7 @@ function Home() {
 												href={`/blog/${post.slug}`}
 												thumbnail={post.coverImage}
 												subtitle={post.excerpt}
-												className="flex-row h-auto min-h-[8rem] md:h-32"
+												orientation="horizontal"
 											/>
 										</motion.div>
 									))
