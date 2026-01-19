@@ -128,11 +128,13 @@ export default defineSchema({
 		duration: v.optional(v.string()),
 		publishedAt: v.number(),
 		fetchedAt: v.optional(v.number()),
+        statsUpdatedAt: v.optional(v.number()), // Updated stats field
 		tags: v.optional(v.array(v.string())),
 	})
 		.index("by_youtube_id", ["youtubeId"])
 		.index("by_published", ["publishedAt"])
-		.index("by_views", ["viewCount"]),
+		.index("by_views", ["viewCount"])
+        .index("by_stats_updated", ["statsUpdatedAt"]), // Index for incremental updates
 
 	// Demo tables (optional to keep)
 	products: defineTable({
