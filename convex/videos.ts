@@ -69,18 +69,21 @@ export const list = query({
 		// Filter by Type (Short vs Video)
 		if (args.type) {
 			filtered = filtered.filter((v) => {
+				const titleLower = v.title.toLowerCase();
+				const isShortByTitle = titleLower.includes("#shorts") || titleLower.includes("#short");
+
+				// If title indicates it's a short, treat it as such
+				if (isShortByTitle) {
+					return args.type === "short";
+				}
+
+				// Otherwise, check duration
 				const duration = v.duration;
 				if (!duration) return false;
 
 				// Parse ISO 8601 duration
 				// Shorts are typically <= 60 seconds, but we allow up to 90s to be safe
-				// Also check title/tags for #shorts
-
-				const isShort = (() => {
-					// Check metadata first
-					const titleLower = v.title.toLowerCase();
-					if (titleLower.includes("#shorts") || titleLower.includes("#short")) return true;
-					
+				const isShortByDuration = (() => {
 					// Check for 'H' (Hours) -> definitely long
 					if (duration.includes("H")) return false;
 
@@ -96,7 +99,7 @@ export const list = query({
 					return totalSeconds <= 90;
 				})();
 
-				return args.type === "short" ? isShort : !isShort;
+				return args.type === "short" ? isShortByDuration : !isShortByDuration;
 			});
 		}
 

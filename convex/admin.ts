@@ -27,7 +27,7 @@ export const banUser = mutation({
 	args: { userId: v.id("users") },
 	handler: async (ctx, args) => {
 		await checkAdmin(ctx);
-		await ctx.db.patch(args.userId, { role: "banned" });
+		await ctx.db.patch(args.userId, { banned: true });
 	},
 });
 
