@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "convex/react";
-import { Search } from "lucide-react";
+import { Eye, Search } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { ContentCard } from "@/components/pixel/ContentCard";
@@ -125,12 +125,15 @@ function VideosIndex() {
 										isRecent={isRecent(video.publishedAt)}
 										metadata={[
 											{
-												label: "VISUALIZAÇÕES",
+												label: "",
+												icon: <Eye className="w-3 h-3 md:w-3.5 md:h-3.5" />,
 												value: formatViews(video.viewCount),
 											},
 											{
-												label: "EM",
-												value: new Date(video.publishedAt).toLocaleDateString(),
+												label: "",
+												value: new Date(video.publishedAt).toLocaleDateString(
+													"pt-BR",
+												),
 											},
 										]}
 									/>
@@ -193,11 +196,13 @@ function VideosIndex() {
 														isRecent={isRecent(video.publishedAt)}
 														metadata={[
 															{
-																label: "VISUALIZAÇÕES",
+																label: "",
+																icon: (
+																	<Eye className="w-3 h-3 md:w-3.5 md:h-3.5" />
+																),
 																value: formatViews(video.viewCount),
 															},
 														]}
-														// Ensure shadow is on the card itself via PixelCard which is used inside ContentCard
 													/>
 												</motion.div>
 											</CarouselItem>

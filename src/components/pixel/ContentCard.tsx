@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { Eye, MessageSquare, ThumbsUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { PixelCard } from "./PixelCard";
 
@@ -7,7 +8,7 @@ export interface ContentCardProps {
 	type: "video" | "blog" | "quiz";
 	thumbnail?: string;
 	subtitle?: string;
-	metadata?: { label: string; value: string }[];
+	metadata?: { label: string; value: string; icon?: React.ReactNode }[];
 	href: string;
 	isMostViewed?: boolean;
 	isRecent?: boolean;
@@ -33,7 +34,6 @@ export function ContentCard({
 				hoverEffect
 				className={cn(
 					"h-full p-0 overflow-hidden flex flex-col relative",
-					// Apply shadow here specifically if needed or rely on PixelCard default
 					isMostViewed && "enchanted ring-2 ring-purple-500",
 					isRecent && "gold-glow ring-2 ring-[#FFD700]",
 					className,
@@ -92,8 +92,11 @@ export function ContentCard({
 
 					<div className="mt-auto pt-2 md:pt-3 flex justify-between items-center gap-2 text-[9px] md:text-[10px] text-muted-foreground font-pixel border-t border-white/10">
 						{metadata?.map((meta) => (
-							<span key={meta.label} className="whitespace-nowrap">
-								{meta.value} {meta.label}
+							<span
+								key={meta.label}
+								className="whitespace-nowrap flex items-center gap-1"
+							>
+								{meta.icon} {meta.value} {meta.label}
 							</span>
 						))}
 					</div>
