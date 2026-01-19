@@ -1,13 +1,13 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useMutation } from "convex/react";
-import { AlertCircle, Camera, CheckCircle2, Save, User } from "lucide-react";
+import { Camera, Save, User } from "lucide-react";
 import { useRef, useState } from "react";
+import { toast } from "sonner";
 import { PageTitle } from "@/components/pixel/AnimatedText";
 import { MinecraftSkinViewer } from "@/components/pixel/MinecraftSkinViewer";
 import { PageWrapper } from "@/components/pixel/PageWrapper";
 import { PixelButton } from "@/components/pixel/PixelButton";
 import { PixelCard } from "@/components/pixel/PixelCard";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authQueryOptions } from "@/lib/auth-query";
@@ -64,20 +64,14 @@ function SettingsPage() {
 	const [isUploading, setIsUploading] = useState(false);
 	const [mcUsername, setMcUsername] = useState(user.minecraftUsername || "");
 	const [isSavingUsername, setIsSavingUsername] = useState(false);
-	const [feedback, setFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
-
-	const showFeedback = (type: "success" | "error", message: string) => {
-		setFeedback({ type, message });
-		setTimeout(() => setFeedback(null), type === "success" ? 3000 : 5000);
-	};
 
 	const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
 		if (!file) return;
 
 		if (file.size > 5 * 1024 * 1024) {
-			showFeedback("error", "A imagem deve ter no máximo 5MB");
+			toast.error("A imagem deve ter no máximo 5MB");
 			return;
 		}
 
@@ -97,12 +91,12 @@ function SettingsPage() {
 
 			await updateAvatar({ storageId, token });
 
-			showFeedback("success", "Avatar atualizado! Recarregando...");
+			toast.success("Avatar atualizado! Recarregando...");
 			setTimeout(() => window.location.reload(), 1500);
 		} catch (error) {
 			console.error(error);
 			const errorMessage = error instanceof Error ? error.message : "Falha ao atualizar";
-			showFeedback("error", translateError(errorMessage));
+			toast.error(translateError(errorMessage));
 		} finally {
 			setIsUploading(false);
 		}
@@ -113,12 +107,12 @@ function SettingsPage() {
 		setIsSavingUsername(true);
 		try {
 			await updateMcUsername({ username: mcUsername, token });
-			showFeedback("success", "Username salvo! Recarregando...");
+			toast.success("Username salvo! Recarregando...");
 			setTimeout(() => window.location.reload(), 1500);
 		} catch (error) {
 			console.error(error);
 			const errorMessage = error instanceof Error ? error.message : "Erro ao salvar";
-			showFeedback("error", translateError(errorMessage));
+			toast.error(translateError(errorMessage));
 		} finally {
 			setIsSavingUsername(false);
 		}
@@ -126,26 +120,6 @@ function SettingsPage() {
 
 	return (
 		<PageWrapper>
-			{feedback && (
-				<Alert
-					variant={feedback.type === "error" ? "destructive" : "default"}
-					className={`mb-6 ${
-						feedback.type === "success"
-							? "border-green-500 bg-green-500/10 text-green-500"
-							: ""
-					}`}
-				>
-					{feedback.type === "success" ? (
-						<CheckCircle2 className="h-4 w-4" />
-					) : (
-						<AlertCircle className="h-4 w-4" />
-					)}
-					<AlertTitle>
-						{feedback.type === "success" ? "Sucesso!" : "Ops!"}
-					</AlertTitle>
-					<AlertDescription>{feedback.message}</AlertDescription>
-				</Alert>
-			)}
 			<PageTitle subtitle="Gerencie seu perfil e preferências">
 				CONFIGURAÇÕES
 			</PageTitle>

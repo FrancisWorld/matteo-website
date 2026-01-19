@@ -10,6 +10,7 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { ReactLenis } from "lenis/react";
 import { PixelLayout } from "@/components/pixel/PixelLayout";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import { Toaster } from "@/components/ui/sonner";
 import ConvexProvider from "../integrations/convex/provider";
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles.css?url";
@@ -65,6 +66,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			<body>
 				<ConvexProvider>
 					{children}
+					<Toaster />
 					<TanStackDevtools
 						config={{
 							position: "bottom-right",
