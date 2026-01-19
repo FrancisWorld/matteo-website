@@ -14,14 +14,25 @@ export function PixelCard({
 	return (
 		<motion.div
 			whileHover={hoverEffect ? { y: -4 } : undefined}
-			transition={{ ease: "linear", duration: 0.1 }}
+			transition={{ type: "tween", duration: 0.15, ease: "linear" }}
+			style={
+				{
+					"--shadow-right": "#000000",
+					"--shadow-bottom": "#000000",
+				} as React.CSSProperties
+			}
 			className={cn(
-				"bg-card text-card-foreground border-2 border-foreground p-6",
-				"shadow-[4px_4px_0px_0px_var(--foreground)]",
+				"relative bg-card text-card-foreground border-2 border-foreground p-6 pixel-shadow-3d",
 				className,
 			)}
 			{...props}
 		>
+			{/* Corner Accents */}
+			<div className="absolute top-1 left-1 w-2 h-2 bg-primary pointer-events-none" />
+			<div className="absolute top-1 right-1 w-2 h-2 bg-primary pointer-events-none" />
+			<div className="absolute bottom-1 left-1 w-2 h-2 bg-primary pointer-events-none" />
+			<div className="absolute bottom-1 right-1 w-2 h-2 bg-primary pointer-events-none" />
+
 			{children as React.ReactNode}
 		</motion.div>
 	);

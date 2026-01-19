@@ -1,83 +1,140 @@
-import { Link } from "@tanstack/react-router";
 import {
-	Disc as Discord,
-	Instagram,
-	Search,
-	Twitter,
-	Youtube,
-} from "lucide-react";
-import { signOut, useSession } from "@/lib/auth-client";
+	Link,
+	useNavigate,
+	useRouter,
+	useRouterState,
+} from "@tanstack/react-router";
+import { motion, useScroll, useTransform } from "motion/react";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
+import { signOut } from "@/lib/auth-client";
+import { DiscordIcon } from "../ui/discord";
+import { InstagramIcon } from "../ui/instagram";
+import { SearchIcon } from "../ui/search";
+import { TwitterIcon } from "../ui/twitter";
+import { YoutubeIcon } from "../ui/youtube";
 import { PixelButton } from "./PixelButton";
 
 export function PixelLayout({ children }: { children: React.ReactNode }) {
-	const session = useSession();
-	const user = session.data?.user;
+	const session = useAuthGuard();
+	const user = session.data?.user as any;
+	const router = useRouter();
+	const navigate = useNavigate();
+	const routerState = useRouterState();
+	const isHomePage = routerState.location.pathname === "/";
+
+	const avatarUrl = user?.image
+		? user.image
+		: user?.minecraftUsername
+			? `https://minotar.net/avatar/${encodeURIComponent(user.minecraftUsername)}/32`
+			: null;
+
+	const { scrollY } = useScroll();
+
+	const headerBg = useTransform(
+		scrollY,
+		[0, 100],
+		isHomePage
+			? ["rgba(0,0,0,0)", "rgba(18,18,18,0.98)"]
+			: ["rgba(18,18,18,0.95)", "rgba(18,18,18,0.98)"],
+	);
+
+	const headerBorder = useTransform(
+		scrollY,
+		[0, 100],
+		isHomePage
+			? ["rgba(0,0,0,0)", "rgba(0,0,0,1)"]
+			: ["rgba(0,0,0,0.5)", "rgba(0,0,0,1)"],
+	);
+
+	const headerShadow = useTransform(
+		scrollY,
+		[0, 100],
+		[
+			"0 0 0 rgba(0,0,0,0)",
+			"0 4px 20px rgba(0,0,0,0.5), 0 0 40px rgba(85,170,85,0.1)",
+		],
+	);
 
 	return (
-		<div className="min-h-screen w-full bg-background text-foreground font-body flex flex-col relative overflow-hidden">
-			{/* Background Pattern */}
-			<div
-				className="fixed inset-0 z-0 pointer-events-none opacity-5"
+		<div className="min-h-screen w-full bg-background text-foreground font-body flex flex-col relative">
+			<motion.header
+				className="fixed top-0 left-0 right-0 z-50 border-b-4 backdrop-blur-md"
 				style={{
-					backgroundImage:
-						"repeating-linear-gradient(45deg, var(--foreground) 25%, transparent 25%, transparent 75%, var(--foreground) 75%, var(--foreground)), repeating-linear-gradient(45deg, var(--foreground) 25%, var(--background) 25%, var(--background) 75%, var(--foreground) 75%, var(--foreground))",
-					backgroundPosition: "0 0, 10px 10px",
-					backgroundSize: "20px 20px",
+					backgroundColor: headerBg,
+					borderColor: headerBorder,
+					boxShadow: headerShadow,
 				}}
-			/>
-
-			{/* Global Navigation (Minecraft Design System) */}
-			<header className="relative z-50 bg-[#1e1e1e] border-b-4 border-b-[#000000] sticky top-0">
+			>
 				<div className="container mx-auto px-4 h-20 flex items-center justify-between">
-					{/* Logo Section */}
 					<div className="flex items-center gap-8">
-						<Link
-							to="/"
-							className="text-2xl font-pixel text-white tracking-widest hover:text-primary transition-colors drop-shadow-[2px_2px_0_#000]"
-						>
-							MATTEO
+						<Link to="/" className="group">
+							<motion.span
+								className="text-2xl font-pixel text-white tracking-widest pixel-text-shadow block"
+								whileHover={{ scale: 1.05 }}
+								transition={{ type: "spring", stiffness: 400 }}
+							>
+								<span className="group-hover:text-primary transition-colors duration-200">
+									MATTEO
+								</span>
+							</motion.span>
 						</Link>
 
-						{/* Desktop Nav */}
 						<nav className="hidden md:flex items-center gap-6">
 							<NavLink to="/videos">VÍDEOS</NavLink>
 							<NavLink to="/blog">BLOG</NavLink>
+							<NavLink to="/quiz">QUIZZES</NavLink>
 							<NavLink to="/shop">LOJA</NavLink>
 							<NavLink to="/community">COMUNIDADE</NavLink>
 						</nav>
 					</div>
 
-					{/* Right Actions */}
 					<div className="flex items-center gap-4">
-						<button
+						<motion.button
 							type="button"
-							className="p-2 hover:bg-white/10 text-white"
+							className="p-2 text-white/80 hover:text-white hover:bg-white/10"
 							aria-label="Pesquisar"
+							whileHover={{ scale: 1.1 }}
+							whileTap={{ scale: 0.95 }}
 						>
-							<Search size={20} />
-						</button>
+							<SearchIcon size={20} />
+						</motion.button>
 						{session.data ? (
 							<div className="flex items-center gap-4">
 								<div className="flex items-center gap-2">
-									{user?.image ? (
-										<img
-											src={user.image}
-											alt={user.name}
-											className="w-8 h-8 border-2 border-foreground"
-										/>
-									) : (
-										<div className="w-8 h-8 border-2 border-foreground bg-primary/20 flex items-center justify-center font-pixel text-[10px]">
-											?
-										</div>
-									)}
-									<span className="font-pixel text-xs text-white hidden md:block">
-										{user?.name}
-									</span>
+									<Link to="/settings">
+										{avatarUrl ? (
+											<motion.img
+												src={avatarUrl}
+												alt={user.name}
+												className="w-8 h-8 border-2 border-primary cursor-pointer"
+												whileHover={{ scale: 1.1, rotate: 5 }}
+											/>
+										) : (
+											<div className="w-8 h-8 border-2 border-primary bg-primary/20 flex items-center justify-center font-pixel text-[10px] cursor-pointer hover:scale-110 transition-transform">
+												?
+											</div>
+										)}
+									</Link>
+									<Link to="/settings">
+										<span className="font-pixel text-xs text-white hidden md:block hover:text-primary transition-colors cursor-pointer">
+											{user?.name}
+										</span>
+									</Link>
 								</div>
 								<PixelButton
 									variant="destructive"
 									size="sm"
-									onClick={() => signOut()}
+									onClick={() => {
+										signOut({
+											fetchOptions: {
+												onSuccess: () => {
+													router.invalidate().then(() => {
+														navigate({ to: "/" });
+													});
+												},
+											},
+										});
+									}}
 								>
 									SAIR
 								</PixelButton>
@@ -95,65 +152,75 @@ export function PixelLayout({ children }: { children: React.ReactNode }) {
 						)}
 					</div>
 				</div>
-			</header>
+			</motion.header>
 
-			{/* Main Content */}
-			<main className="relative z-10 flex-1 w-full">{children}</main>
+			<main className="relative z-10 flex-1 w-full pt-20 bg-background">
+				{children}
+			</main>
 
-			{/* Footer (Minecraft Design System) */}
-			<footer className="relative z-10 bg-[#121212] border-t-4 border-[#333333] pt-16 pb-8 text-white">
+			<footer className="relative z-10 bg-[#0a0a0a] border-t-4 border-[#222] pt-16 pb-8 text-white">
 				<div className="container mx-auto px-4">
 					<div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
 						<FooterColumn
 							heading="CONTEÚDO"
 							links={[
-								"Últimos Vídeos",
-								"Postagens do Blog",
-								"Quizzes",
-								"Séries",
+								{ label: "Últimos Vídeos", to: "/videos" },
+								{ label: "Postagens do Blog", to: "/blog" },
+								{ label: "Quizzes", to: "/quiz" },
+								{ label: "Séries", to: "/videos" },
 							]}
 						/>
 						<FooterColumn
 							heading="LOJA"
 							links={[
-								"Loja de Merch",
-								"Skins Digitais",
-								"Adesivos",
-								"Gift Cards",
+								{ label: "Loja de Merch", to: "/shop" },
+								{ label: "Skins Digitais", to: "/shop" },
+								{ label: "Adesivos", to: "/shop" },
+								{ label: "Gift Cards", to: "/shop" },
 							]}
 						/>
 						<FooterColumn
 							heading="COMUNIDADE"
-							links={["Servidor no Discord", "Fan Art", "Fóruns", "Suporte"]}
+							links={[
+								{ label: "Servidor no Discord", to: "/community" },
+								{ label: "Fan Art", to: "/community" },
+								{ label: "Fóruns", to: "/community" },
+								{ label: "Suporte", to: "/community" },
+							]}
 						/>
 						<div className="col-span-2 md:col-span-1">
-							<h4 className="font-pixel text-lg mb-6 text-primary">
+							<h4 className="font-pixel text-sm mb-6 text-primary pixel-text-shadow">
 								SIGA O MATTEO
 							</h4>
-							<div className="flex gap-4">
-								<SocialIcon icon={<Youtube size={20} />} label="YouTube" />
-								<SocialIcon icon={<Twitter size={20} />} label="Twitter" />
-								<SocialIcon icon={<Instagram size={20} />} label="Instagram" />
-								<SocialIcon icon={<Discord size={20} />} label="Discord" />
+							<div className="flex gap-3">
+								<SocialIcon icon={<YoutubeIcon size={18} />} label="YouTube" />
+								<SocialIcon icon={<TwitterIcon size={18} />} label="Twitter" />
+								<SocialIcon
+									icon={<InstagramIcon size={18} />}
+									label="Instagram"
+								/>
+								<SocialIcon icon={<DiscordIcon size={18} />} label="Discord" />
 							</div>
 						</div>
 					</div>
 
-					<div className="border-t-2 border-[#333333] pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500 gap-4">
-						<div className="flex gap-6">
-							<Link to="/" className="hover:text-white">
+					<div className="border-t-2 border-[#222] pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-600 gap-4">
+						<div className="flex gap-6 font-body">
+							<Link
+								to="/"
+								className="hover:text-primary transition-colors text-sm"
+							>
 								Política de Privacidade
 							</Link>
-							<Link to="/" className="hover:text-white">
+							<Link
+								to="/"
+								className="hover:text-primary transition-colors text-sm"
+							>
 								Termos de Serviço
 							</Link>
-							<Link to="/" className="hover:text-white">
-								Marcas Registradas
-							</Link>
 						</div>
-						<p>
-							© {new Date().getFullYear()} MATTEO. Não é um produto oficial do
-							Minecraft.
+						<p className="font-pixel text-[10px] text-gray-500">
+							© {new Date().getFullYear()} MATTEO
 						</p>
 					</div>
 				</div>
@@ -163,13 +230,29 @@ export function PixelLayout({ children }: { children: React.ReactNode }) {
 }
 
 function NavLink({ to, children }: { to: string; children: React.ReactNode }) {
+	const routerState = useRouterState();
+	const isActive = routerState.location.pathname.startsWith(to);
+
 	return (
-		<Link
-			to={to}
-			className="font-pixel text-xs text-gray-300 hover:text-white transition-colors relative group py-2"
-		>
-			{children}
-			<span className="absolute bottom-0 left-0 w-full h-1 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
+		<Link to={to} className="relative group py-2">
+			<span
+				className={`font-pixel text-xs transition-colors pixel-text-shadow ${
+					isActive ? "text-primary" : "text-gray-300 group-hover:text-white"
+				}`}
+			>
+				{children}
+			</span>
+			{isActive && (
+				<motion.div
+					layoutId="navbar-indicator"
+					className="absolute -bottom-1 left-0 w-full h-[2px] bg-primary shadow-[0_0_8px_rgba(85,170,85,0.8)]"
+					transition={{
+						type: "spring",
+						stiffness: 500,
+						damping: 30,
+					}}
+				/>
+			)}
 		</Link>
 	);
 }
@@ -179,19 +262,21 @@ function FooterColumn({
 	links,
 }: {
 	heading: string;
-	links: string[];
+	links: { label: string; to: string }[];
 }) {
 	return (
 		<div>
-			<h4 className="font-pixel text-lg mb-6 text-gray-400">{heading}</h4>
-			<ul className="space-y-3 font-body text-lg">
+			<h4 className="font-pixel text-xs mb-4 text-gray-400 pixel-text-shadow tracking-wider">
+				{heading}
+			</h4>
+			<ul className="space-y-2 font-body">
 				{links.map((link) => (
-					<li key={link}>
+					<li key={link.label}>
 						<Link
-							to="/"
-							className="text-gray-500 hover:text-white hover:underline decoration-primary decoration-2 underline-offset-4 transition-all"
+							to={link.to}
+							className="text-gray-500 hover:text-primary transition-colors text-base"
 						>
-							{link}
+							{link.label}
 						</Link>
 					</li>
 				))}
@@ -202,12 +287,14 @@ function FooterColumn({
 
 function SocialIcon({ icon, label }: { icon: React.ReactNode; label: string }) {
 	return (
-		<Link
-			to="/"
-			className="w-10 h-10 bg-[#333333] flex items-center justify-center hover:bg-primary hover:text-white transition-colors border-2 border-black shadow-[2px_2px_0_0_#000] text-gray-400"
+		<motion.a
+			href="#"
+			className="w-9 h-9 bg-[#1a1a1a] flex items-center justify-center border-2 border-[#333] text-gray-500 hover:text-white hover:border-primary hover:bg-primary/20 transition-colors"
 			aria-label={label}
+			whileHover={{ scale: 1.1, y: -2 }}
+			whileTap={{ scale: 0.95 }}
 		>
 			{icon}
-		</Link>
+		</motion.a>
 	);
 }

@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery } from "convex/react";
 import { motion } from "motion/react";
 import { useState } from "react";
+import { PageWrapper } from "@/components/pixel/PageWrapper";
 import { PixelButton } from "@/components/pixel/PixelButton";
 import { PixelCard } from "@/components/pixel/PixelCard";
 import { authClient } from "@/lib/auth-client";
@@ -31,22 +32,22 @@ function QuizPlayer() {
 
 	if (quiz === undefined) {
 		return (
-			<div className="flex items-center justify-center min-h-[50vh]">
+			<PageWrapper className="flex items-center justify-center">
 				<div className="font-pixel">LOADING QUIZ...</div>
-			</div>
+			</PageWrapper>
 		);
 	}
 
 	if (!quiz) {
 		return (
-			<div className="flex items-center justify-center min-h-[50vh]">
+			<PageWrapper className="flex items-center justify-center">
 				<PixelCard className="text-center p-12">
 					<h1 className="text-4xl font-pixel mb-4">QUIZ NOT FOUND</h1>
 					<p className="text-muted-foreground">
 						The quiz you're looking for doesn't exist.
 					</p>
 				</PixelCard>
-			</div>
+			</PageWrapper>
 		);
 	}
 
@@ -79,7 +80,7 @@ function QuizPlayer() {
 	};
 
 	return (
-		<div className="max-w-3xl mx-auto space-y-8">
+		<PageWrapper className="max-w-3xl mx-auto space-y-8">
 			<motion.div
 				initial={{ opacity: 0, y: -20 }}
 				animate={{ opacity: 1, y: 0 }}
@@ -194,6 +195,6 @@ function QuizPlayer() {
 					)}
 				</div>
 			</div>
-		</div>
+		</PageWrapper>
 	);
 }

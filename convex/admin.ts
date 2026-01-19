@@ -27,7 +27,7 @@ export const banUser = mutation({
 	args: { userId: v.id("users") },
 	handler: async (ctx, args) => {
 		await checkAdmin(ctx);
-		await ctx.db.patch(args.userId, { role: "banned" });
+		await ctx.db.patch(args.userId, { banned: true });
 	},
 });
 
@@ -44,5 +44,23 @@ export const deleteQuiz = mutation({
 	handler: async (ctx, args) => {
 		await checkAdmin(ctx);
 		await ctx.db.delete(args.quizId);
+	},
+});
+
+export const promoteToAdmin = mutation({
+	args: { email: v.string() },
+	handler: async (ctx, args) => {
+		await checkAdmin(ctx);
+		const user = await ctx.db
+			.query("users")
+			.filter((q) => q.eq(q.field("email"), args.email))
+			.first();
+
+		if (!user) {
+			throw new Error("User not found");
+		}
+
+		await ctx.db.patch(user._id, { role: "admin" });
+		return `User ${user.name} (${user.email}) is now an ADMIN`;
 	},
 });

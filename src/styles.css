@@ -57,6 +57,28 @@ code {
   --shadow-pixel: 4px 4px 0px 0px #000000;
 }
 
+/* Better pixel button 3D effect using layered box-shadows */
+.pixel-shadow-3d {
+  box-shadow:
+    1px 0 0 var(--shadow-right, #2f7543),
+    1px 1px 0 var(--shadow-bottom, #1a4d23),
+    2px 1px 0 var(--shadow-right, #2f7543),
+    2px 2px 0 var(--shadow-bottom, #1a4d23),
+    3px 2px 0 var(--shadow-right, #2f7543),
+    3px 3px 0 var(--shadow-bottom, #1a4d23),
+    4px 3px 0 var(--shadow-right, #2f7543),
+    4px 4px 0 var(--shadow-bottom, #1a4d23);
+}
+
+/* Minecraft text depth effect */
+.pixel-text-shadow {
+  text-shadow: 2px 2px 0px rgba(0,0,0,0.8);
+}
+
+.pixel-text-shadow-lg {
+  text-shadow: 4px 4px 0px rgba(0,0,0,0.8);
+}
+
 @theme inline {
   --font-pixel: 'Press Start 2P', cursive;
   --font-body: 'VT323', monospace;
@@ -146,19 +168,23 @@ code {
   position: relative;
 }
 
-.gold-glow::after {
-  content: 'NEW';
+/* Scanlines Effect */
+.scanlines::before {
+  content: " ";
+  display: block;
   position: absolute;
-  top: -12px;
-  right: -8px;
-  background: linear-gradient(135deg, #FFD700, #FFA500);
-  color: #000;
-  font-family: 'Press Start 2P', cursive;
-  font-size: 8px;
-  padding: 4px 8px;
-  border: 2px solid #000;
-  z-index: 20;
-  animation: bounce 2s infinite;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(
+      to bottom,
+      rgba(18, 16, 16, 0) 50%,
+      rgba(0, 0, 0, 0.1) 50%
+  );
+  background-size: 100% 4px;
+  z-index: 9999;
+  pointer-events: none;
 }
 
 @keyframes bounce {
